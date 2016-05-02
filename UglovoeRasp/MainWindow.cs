@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Угловое_распределение
 {
@@ -16,15 +17,53 @@ namespace Угловое_распределение
         {
             InitializeComponent();
         }
+        Neutron_struct[] neu;
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+            neu = new Neutron_struct[0];
+        }
 
         private void загрузитьДанныеИзФайлаToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                OpenFileDialog op = new OpenFileDialog();
+                op.Multiselect = false;
+                op.Filter = "UGL файлы (*.ugl)|*.ugl|Все файлы (*.*)|*.*";
+                //Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*
+                DialogResult res = op.ShowDialog();
+                if (res != System.Windows.Forms.DialogResult.OK)
+                    return;
+                String path = op.FileName;
+                XmlDocument doc = new XmlDocument();
+                doc.Load(path);
+                foreach (XmlNode node in doc.DocumentElement)
+                {
+                    if (node.Name == "R")
+                        textBox1_R.Text = node.InnerText;
+                    else if (node.Name == "Плотность")
+                        textBox2_Плотность.Text = node.InnerText;
+                    else if (node.Name == "Числозерен")
+                        textBox3_count_зерен.Text = node.InnerText;
+                }
+            }
+            catch (XmlException)
+            {
+                MessageBox.Show("Указанный файл хранит данные неподходящие для приложения. Выберите правильный файл", "", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
 
         private void сохранитьРезультатВФайлToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (neu.Length == 0)
+                return;
+            SaveFileDialog s = new SaveFileDialog();
+            s.Filter = "UGL файлы (*.ugl)|*.ugl|Все файлы (*.*)|*.*";
+            s.DefaultExt = ".ugl";
+            if (s.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+            String path = s.FileName;
         }
 
         private bool prov_R_Density_Grains_Correct_TextBox(ref double R, ref double density, ref double grains)
@@ -113,11 +152,6 @@ namespace Угловое_распределение
             }
             int grains_int = (int)Math.Truncate(grains_double);
             Neutron_struct[] neutron_box = neutron_class.randomInW_R(grains_int, R_double);
-        }
-
-        private void MainWindow_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
