@@ -88,7 +88,7 @@ namespace Угловое_распределение
         }
 
         /// <summary>
-        /// Случайным образом создает границы для 
+        /// Случайным образом создает границы для пространства в котором находятся нейтроны
         /// </summary>
         /// <param name="random">Генератор псевдослучайных чисел</param>
         /// <param name="n">Число зерен</param>
@@ -99,7 +99,7 @@ namespace Угловое_распределение
             if (editing == false)
                 return false;
             int i, j;
-            i = j = n * 2 * (int)density;
+            i = j = (int)(n * density);
             xmax = random.Next(i, j);
             ymax = random.Next(i, j);
             zmax = random.Next(i, j);
@@ -119,19 +119,29 @@ namespace Угловое_распределение
         public Neutron_struct[] randomInW_R(int n, double dr)
         {
             int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Month;
-            rand += DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Millisecond;
+            rand = rand - DateTime.Now.Hour - DateTime.Now.Minute - DateTime.Now.Millisecond;
             rand += (int)Math.Truncate(dr);
             rand = Math.Abs(rand);
-            Random random = new Random(rand);
+            Random random = new Random();
             Neutron_struct[] neutrons = new Neutron_struct[n];
-            Parallel.For(0, n, (i, state) =>
+            //Parallel.For(0, n, (i, state) =>
+            double r_r = 0;
+            for (int i = 0; i < n; i++)
             {
-                double w_r = random.Next(0, 10);
-                w_r = ((3 * Math.Pow(w_r, 2)) / (Math.Pow(dr, 3)))
-                    * Math.Exp(-Math.Pow((w_r / dr), 3));
+                r_r = r_r + 0.005;
+                if (r_r > 5)
+                    r_r = 0.1;
+            reti:
+            double _r = random.Next(0,9) + random.NextDouble(); 
+                double w_r = ((3 * Math.Pow(_r, 2)) / (Math.Pow(dr, 3)));
+                double w_ = Math.Exp(-Math.Pow((_r / dr), 3));
+                w_r = w_r * w_;
+                w_r *= 10;
+                if (w_r < 0.1)
+                    goto reti;
                 neutrons[i] = new Neutron_struct();
                 neutrons[i].radius = w_r;
-            });
+            }//);
             return neutrons;
         }
         /// <summary>
@@ -144,17 +154,20 @@ namespace Угловое_распределение
         public Neutron_struct[] randomGenXYZ(Neutron_struct[] neutrons, bool prov)
         {
             int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Month;
-            rand += DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Millisecond;
+            rand -= (DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Millisecond);
             rand -= DateTime.Now.DayOfYear;
             rand = Math.Abs(rand);
             Random random = new Random(rand);
-            for (int i = 0; i < neutrons.Length; i++)
+            //for (int i = 0; i < neutrons.Length; i++)
+            Parallel.For(0, neutrons.Length, (i, statei) =>
             {
+                random = new Random(rand + i);
             ret0:
                 bool ifi = false;
             ret1:
-                neutrons[i].x = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
-                neutrons[i].x += random.NextDouble();
+                double xx = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
+                xx += random.NextDouble();
+                neutrons[i].x = xx;
                 if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
                     goto ret1;
             ret2:
@@ -167,91 +180,90 @@ namespace Угловое_распределение
                 neutrons[i].z += random.NextDouble();
                 if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
                     goto ret3;
-                Parallel.For(0, i - 1, (j, state) =>
-                {
-                    if (neutrons[i].x == neutrons[j].x && neutrons[i].y == neutrons[j].y && neutrons[i].z == neutrons[j].z)
-                    {
-                        ifi = true;
-                        state.Break();
-                    }
-                });
                 if (ifi)
                     goto ret0;
-            }
+            });
             if (prov)
             {
-                getNeutoronsNotConnect(neutrons);
+                neutrons = getNeutoronsNotConnect(neutrons);
             }
             return neutrons;
         }
 
         private Neutron_struct[] getNeutoronsNotConnect(Neutron_struct[] neutrons)
         {
-            int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Hour - DateTime.Now.Minute - DateTime.Now.Millisecond - DateTime.Now.Second;
-            rand = Math.Abs(rand);
-            Random random = new Random(rand);
-            start0:
+        /*int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Hour - DateTime.Now.Minute - DateTime.Now.Millisecond - DateTime.Now.Second;
+        rand = Math.Abs(rand);
+        Random random = new Random(rand);*/
+        start0:
             int sumconnects = 0;
             Parallel.For(0, neutrons.Length, (i, statei) =>
             {
                 var t1 = neutrons[i];
-                Parallel.For(0, neutrons.Length, (j, statej) =>
+                for (int j=0;j<neutrons.Length;j++)
                 {
                     if (j != i)
                     {
                         var t2 = neutrons[j];
-                        double L = Math.Pow((t2.x - t2.x), 2)
-                            + Math.Pow((t2.y - t2.y), 2)
-                            + Math.Pow((t2.z - t2.z), 2);
+                        double L = Math.Pow((t2.x - t1.x), 2)
+                            + Math.Pow((t2.y - t1.y), 2)
+                            + Math.Pow((t2.z - t1.z), 2);
                         L = Math.Sqrt(L);
-                        if (L < t1.radius + t2.radius)
+                        if (Math.Abs(L) < t1.radius + t2.radius)
+                        {
                             sumconnects++;
+                            statei.Break();
+                        }
                     }
-                });
+                }
             });
             if (sumconnects == 0)
                 return neutrons;
-            Parallel.For(0, neutrons.Length, (i, statei) =>
-                {
-                    var t1 = neutrons[i];
-                    ret0:
-                    bool ifi = false;
-                    Parallel.For(0, neutrons.Length, (j, statej) =>
-                        {
-                            if (j != i)
-                            {
-                                var t2 = neutrons[j];
-                                double L = Math.Pow((t2.x - t2.x), 2) 
-                                    + Math.Pow((t2.y - t2.y), 2) 
-                                    + Math.Pow((t2.z - t2.z), 2);
-                                L = Math.Sqrt(L);
-                                if (L < t1.radius + t2.radius)
-                                {
-                                    ifi = true;
-                                    statej.Break();
-                                }
-                            }
-                        });
-                    if (ifi)
+            //Parallel.For(0, neutrons.Length, (i, statei) =>
+            for (int i = 0; i < neutrons.Length; i++)
+            {
+                var t1 = neutrons[i];
+            ret0:
+                bool ifi = false;
+                Parallel.For(0, neutrons.Length, (j, statej) =>
                     {
-                    ret1:
-                        neutrons[i].x = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
-                        neutrons[i].x += random.NextDouble();
-                        if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
-                            goto ret1;
-                    ret2:
-                        neutrons[i].y = random.Next((int)BoxNeutoron.y, (int)BoxNeutoron.ymax);
-                        neutrons[i].y += random.NextDouble();
-                        if (!getBoolProvKordNeuBox(ref neutrons[i].y, ref neutrons[i].radius, BoxNeutoron.y, BoxNeutoron.ymax))
-                            goto ret2;
-                    ret3:
-                        neutrons[i].z = random.Next((int)BoxNeutoron.z, (int)BoxNeutoron.zmax);
-                        neutrons[i].z += random.NextDouble();
-                        if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
-                            goto ret3;
-                        goto ret0;
-                    }
-                });
+                        if (j != i)
+                        {
+                            var t2 = neutrons[j];
+                            double L = Math.Pow((t2.x - t1.x), 2)
+                                + Math.Pow((t2.y - t1.y), 2)
+                                + Math.Pow((t2.z - t1.z), 2);
+                            L = Math.Sqrt(L);
+                            if (L < t1.radius + t2.radius)
+                            {
+                                ifi = true;
+                                statej.Break();
+                            }
+                        }
+                    });
+                if (ifi)
+                {
+                    int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Hour - DateTime.Now.Minute - DateTime.Now.Millisecond - DateTime.Now.Second;
+                    rand = Math.Abs(rand);
+                    Random random = new Random(rand);
+                ret1:
+                    neutrons[i].x = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
+                    neutrons[i].x += random.NextDouble();
+                    if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
+                        goto ret1;
+                ret2:
+                    neutrons[i].y = random.Next((int)BoxNeutoron.y, (int)BoxNeutoron.ymax);
+                    neutrons[i].y += random.NextDouble();
+                    if (!getBoolProvKordNeuBox(ref neutrons[i].y, ref neutrons[i].radius, BoxNeutoron.y, BoxNeutoron.ymax))
+                        goto ret2;
+                ret3:
+                    neutrons[i].z = random.Next((int)BoxNeutoron.z, (int)BoxNeutoron.zmax);
+                    neutrons[i].z += random.NextDouble();
+                    if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
+                        goto ret3;
+                    goto ret0;
+                }
+            }//);
             goto start0;
         }
 

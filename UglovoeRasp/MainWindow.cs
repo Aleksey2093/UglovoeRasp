@@ -94,9 +94,9 @@ namespace Угловое_распределение
             }
             if (!double.TryParse(textBox2_Плотность.Text, out density))
             {
-                if (double.TryParse(textBox2_Плотность.Text.Replace(".", ","), out R))
+                if (double.TryParse(textBox2_Плотность.Text.Replace(".", ","), out density))
                     goto ok;
-                else if (double.TryParse(textBox2_Плотность.Text.Replace(",", "."), out R))
+                else if (double.TryParse(textBox2_Плотность.Text.Replace(",", "."), out density))
                     goto ok;
                 MessageBox.Show("Плотность - числовое значение, не может быть текстовым", "Неправильный ввод",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -111,9 +111,9 @@ namespace Угловое_распределение
             }
             if (!double.TryParse(textBox3_count_зерен.Text, out grains))
             {
-                if (double.TryParse(textBox3_count_зерен.Text.Replace(".", ","), out R))
+                if (double.TryParse(textBox3_count_зерен.Text.Replace(".", ","), out grains))
                     goto ok;
-                else if (double.TryParse(textBox3_count_зерен.Text.Replace(",", "."), out R))
+                else if (double.TryParse(textBox3_count_зерен.Text.Replace(",", "."), out grains))
                     goto ok;
                 MessageBox.Show("Число зерен - числовое значение, не может быть текстовым", "Неправильный ввод",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -158,16 +158,28 @@ namespace Угловое_распределение
                 return;
             }
             int grains_int = (int)Math.Truncate(grains_double);
-            int rand = DateTime.Now.DayOfYear + DateTime.Now.Year +DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond - (int)grains_int;
+            int rand = DateTime.Now.DayOfYear + DateTime.Now.Year + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond - (int)grains_int;
             rand = Math.Abs(rand);
             Random random = new Random(rand);
-            ret: if (!BoxNeutoron.genMaxBoxXYZ(random, grains_int, density))
+        ret: if (!BoxNeutoron.genMaxBoxXYZ(random, grains_int, density))
             {
                 BoxNeutoron.editing = true;
                 goto ret;
             }
             Neutron_struct[] neutrons_box = neutron_class.randomInW_R(grains_int, R_double);
-            neutrons_box = neutron_class.randomGenXYZ(neutrons_box,true);
+            if (checkBox1GraphW.Checked)
+            {
+                double[] rm = new double[grains_int];
+                Parallel.For(0,grains_int,(i,state)=>
+                    {
+                        rm[i] = neutrons_box[i].radius;
+                    });
+                bool ifi = new GraphicsPaint().ShowGraphW(rm, R_double);
+            }
+            if (checkBox1Kord.Checked)
+            {
+                neutrons_box = neutron_class.randomGenXYZ(neutrons_box, true);
+            }
         }
     }
 }

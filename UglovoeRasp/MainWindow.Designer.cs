@@ -35,16 +35,20 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1startmath = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.загрузитьДанныеИзФайлаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сохранитьРезультатВФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.button1startmath = new System.Windows.Forms.Button();
+            this.checkBox1Kord = new System.Windows.Forms.CheckBox();
+            this.checkBox1GraphW = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -65,7 +69,8 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(374, 108);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(374, 115);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // textBox1_R
@@ -132,37 +137,26 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label3.Location = new System.Drawing.Point(3, 70);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(181, 38);
+            this.label3.Size = new System.Drawing.Size(181, 45);
             this.label3.TabIndex = 2;
             this.label3.Text = "Число зерен";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // button1startmath
-            // 
-            this.button1startmath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button1startmath.Location = new System.Drawing.Point(3, 137);
-            this.button1startmath.Name = "button1startmath";
-            this.button1startmath.Size = new System.Drawing.Size(374, 23);
-            this.button1startmath.TabIndex = 1;
-            this.button1startmath.Text = "Расчет";
-            this.button1startmath.UseVisualStyleBackColor = true;
-            this.button1startmath.Click += new System.EventHandler(this.button1startmath_Click);
             // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.button1startmath, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.menuStrip1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.statusStrip1, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 2);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 4;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(380, 221);
             this.tableLayoutPanel2.TabIndex = 2;
@@ -202,11 +196,54 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 199);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 201);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(380, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(380, 20);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.checkBox1Kord);
+            this.flowLayoutPanel1.Controls.Add(this.checkBox1GraphW);
+            this.flowLayoutPanel1.Controls.Add(this.button1startmath);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 144);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(374, 54);
+            this.flowLayoutPanel1.TabIndex = 4;
+            // 
+            // button1startmath
+            // 
+            this.button1startmath.Location = new System.Drawing.Point(219, 3);
+            this.button1startmath.Name = "button1startmath";
+            this.button1startmath.Size = new System.Drawing.Size(145, 23);
+            this.button1startmath.TabIndex = 2;
+            this.button1startmath.Text = "Расчет";
+            this.button1startmath.UseVisualStyleBackColor = true;
+            this.button1startmath.Click += new System.EventHandler(this.button1startmath_Click);
+            // 
+            // checkBox1Kord
+            // 
+            this.checkBox1Kord.AutoSize = true;
+            this.checkBox1Kord.Location = new System.Drawing.Point(3, 3);
+            this.checkBox1Kord.Name = "checkBox1Kord";
+            this.checkBox1Kord.Size = new System.Drawing.Size(117, 17);
+            this.checkBox1Kord.TabIndex = 3;
+            this.checkBox1Kord.Text = "Расчет координат";
+            this.checkBox1Kord.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1GraphW
+            // 
+            this.checkBox1GraphW.AutoSize = true;
+            this.checkBox1GraphW.Checked = true;
+            this.checkBox1GraphW.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1GraphW.Location = new System.Drawing.Point(126, 3);
+            this.checkBox1GraphW.Name = "checkBox1GraphW";
+            this.checkBox1GraphW.Size = new System.Drawing.Size(87, 17);
+            this.checkBox1GraphW.TabIndex = 4;
+            this.checkBox1GraphW.Text = "График W(r)";
+            this.checkBox1GraphW.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
@@ -224,6 +261,8 @@
             this.tableLayoutPanel2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -237,12 +276,15 @@
         private System.Windows.Forms.TextBox textBox1_R;
         private System.Windows.Forms.TextBox textBox2_Плотность;
         private System.Windows.Forms.TextBox textBox3_count_зерен;
-        private System.Windows.Forms.Button button1startmath;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem загрузитьДанныеИзФайлаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сохранитьРезультатВФайлToolStripMenuItem;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Button button1startmath;
+        private System.Windows.Forms.CheckBox checkBox1Kord;
+        private System.Windows.Forms.CheckBox checkBox1GraphW;
     }
 }
