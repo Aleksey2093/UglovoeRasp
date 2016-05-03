@@ -39,17 +39,23 @@ namespace Угловое_распределение
                 doc.Load(path);
                 foreach (XmlNode node in doc.DocumentElement)
                 {
-                    if (node.Name == "R")
-                        textBox1_R.Text = node.InnerText;
-                    else if (node.Name == "Плотность")
-                        textBox2_Плотность.Text = node.InnerText;
-                    else if (node.Name == "Числозерен")
-                        textBox3_count_зерен.Text = node.InnerText;
+                    switch (node.Name)
+                    {
+                        case "R":
+                            textBox1_R.Text = node.InnerText;
+                            break;
+                        case "Плотность":
+                            textBox2_Плотность.Text = node.InnerText;
+                            break;
+                        case "Числозерен":
+                            textBox3_count_зерен.Text = node.InnerText;
+                            break;
+                    }
                 }
             }
             catch (XmlException)
             {
-                MessageBox.Show("Указанный файл хранит данные неподходящие для приложения. Выберите правильный файл", "", 
+                MessageBox.Show("Указанный файл хранит данные неподходящие для приложения. Выберите правильный файл", "",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             }
         }

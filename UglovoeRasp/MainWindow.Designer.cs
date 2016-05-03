@@ -41,13 +41,16 @@
             this.загрузитьДанныеИзФайлаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сохранитьРезультатВФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.button1startmath = new System.Windows.Forms.Button();
             this.checkBox1Kord = new System.Windows.Forms.CheckBox();
             this.checkBox1GraphW = new System.Windows.Forms.CheckBox();
+            this.button1startmath = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -196,11 +199,25 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripProgressBar1,
+            this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 201);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(380, 20);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 14);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 15);
+            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
             // flowLayoutPanel1
             // 
@@ -212,16 +229,6 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(374, 54);
             this.flowLayoutPanel1.TabIndex = 4;
-            // 
-            // button1startmath
-            // 
-            this.button1startmath.Location = new System.Drawing.Point(219, 3);
-            this.button1startmath.Name = "button1startmath";
-            this.button1startmath.Size = new System.Drawing.Size(145, 23);
-            this.button1startmath.TabIndex = 2;
-            this.button1startmath.Text = "Расчет";
-            this.button1startmath.UseVisualStyleBackColor = true;
-            this.button1startmath.Click += new System.EventHandler(this.button1startmath_Click);
             // 
             // checkBox1Kord
             // 
@@ -245,6 +252,16 @@
             this.checkBox1GraphW.Text = "График W(r)";
             this.checkBox1GraphW.UseVisualStyleBackColor = true;
             // 
+            // button1startmath
+            // 
+            this.button1startmath.Location = new System.Drawing.Point(219, 3);
+            this.button1startmath.Name = "button1startmath";
+            this.button1startmath.Size = new System.Drawing.Size(145, 23);
+            this.button1startmath.TabIndex = 2;
+            this.button1startmath.Text = "Расчет";
+            this.button1startmath.UseVisualStyleBackColor = true;
+            this.button1startmath.Click += new System.EventHandler(this.button1startmath_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -261,6 +278,8 @@
             this.tableLayoutPanel2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
@@ -286,5 +305,7 @@
         private System.Windows.Forms.Button button1startmath;
         private System.Windows.Forms.CheckBox checkBox1Kord;
         private System.Windows.Forms.CheckBox checkBox1GraphW;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

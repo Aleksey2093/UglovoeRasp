@@ -88,7 +88,6 @@ namespace Угловое_распределение
                         list[j] = cor;
                         ifi = false;
                         break;
-                        //if (proc100 < cor.y) proc100 = (int)cor.y;
                     }
                 }
                 if (ifi)
