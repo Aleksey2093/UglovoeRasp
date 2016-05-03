@@ -215,6 +215,11 @@ namespace Угловое_распределение
                                 ProgressBar1Расчет.Value = 60;
                             }));
                         neutrons_box = neutron_class.randomGenXYZ(neutrons_box, true);
+                        GraphicsPaint graph = new GraphicsPaint();
+                        graph.ThreeDGraphPaint(neutrons_box, (int)BoxNeutoron.x, (int)BoxNeutoron.xmax, (int)BoxNeutoron.x,
+                            (int)BoxNeutoron.xmax / 4, (int)BoxNeutoron.y, (int)BoxNeutoron.ymax, (int)BoxNeutoron.y,
+                            (int)BoxNeutoron.ymax / 4, (int)BoxNeutoron.z, (int)BoxNeutoron.zmax, (int)BoxNeutoron.z, 
+                            (int)BoxNeutoron.zmax / 4, "", "");
                     }
 
                     Invoke(new MethodInvoker(() =>
@@ -295,7 +300,8 @@ namespace Угловое_распределение
 
         private void настройкиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            GraphicsPaint a = new GraphicsPaint();
+            a.ThreeDGraphPaint(null,1,1,1,1,1,1,1,1,1,1,1,1,"","");
         }
 
         private void справкаToolStripMenuItem_Click(object sender, EventArgs e)

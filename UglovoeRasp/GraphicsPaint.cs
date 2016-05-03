@@ -10,6 +10,7 @@ namespace Угловое_распределение
     public static class GraphShowNowToWindow
     {
         public static int twoDgraph = 0;
+        public static int threeDgraph = 0;
     }
     class GraphicsPaint
     {
@@ -51,6 +52,9 @@ namespace Угловое_распределение
             // Инициализировали библиотеку DISLIN
             dislin.disini();
 
+            dislin.axspos(450, 1800);
+            dislin.axslen(2200, 1200);
+
             dislin.titlin(title, 1);
             dislin.titlin(name, 3);
 
@@ -81,6 +85,69 @@ namespace Угловое_распределение
             dislin.curve(xline, yline, yline.Length);
             dislin.disfin();
             GraphShowNowToWindow.twoDgraph--;
+            return true;
+        }
+
+        public bool ThreeDGraphPaint(Neutron_struct[] neutros, int xmin, int xmax, int xh1, int xh2, int ymin, int ymax,
+            int yh1, int yh2, int zmin, int zmax, int zh1, int zh2, string name, string title)
+        {
+            int i, iret;
+            float[] x = new float[neutros.Length];
+            float[] y = new float[neutros.Length];
+            float[] z = new float[neutros.Length];
+            float[] rad = new float[neutros.Length];
+
+            for (int j = 0; j < neutros.Length;j++ )
+            {
+                x[j] = (float)neutros[j].x;
+                y[j] = (float)neutros[j].y;
+                z[j] = (float)neutros[j].z;
+                rad[j] = (float)neutros[j].radius;
+                rad[j] = (rad[j] * 10); //умножаем на 10, чтобы было лучше видно
+                rad[j] = 10;
+            }
+
+            dislin.setpag("da4p");
+            dislin.scrmod("revers");
+            dislin.metafl("cons");
+            dislin.disini();
+            dislin.pagera();
+            dislin.hwfont();
+            dislin.light("on");
+            dislin.matop3(0.02f, 0.02f, 0.02f, "specular");
+
+            dislin.clip3d("none");
+            dislin.axspos(0, 2500);
+            dislin.axslen(2100, 2100);
+
+            dislin.htitle(50);
+            dislin.titlin(name, 4);
+
+            dislin.name("X-axis", "x");
+            dislin.name("Y-axis", "y");
+            dislin.name("Z-axis", "z");
+
+            dislin.labdig(-1, "xyz");
+            dislin.labl3d("hori");
+            dislin.graf3d(xmin, xmax, xh1, xh2, ymin, ymax, yh1, yh2, zmin, zmax, zh1, zh2);
+
+            dislin.title();
+
+            dislin.shdmod("smooth", "surface");
+            iret = dislin.zbfini();
+            dislin.matop3(1.0f, 0.0f, 0.0f, "diffuse");
+            for (i = 0; i < 17; i++)
+                dislin.sphe3d(x[i], y[i], z[i], rad[i]/*5.0f*/, 50, 25);
+
+            dislin.matop3(0.0f, 1.0f, 0.0f, "diffuse");
+            /*for (i = 0; i < 56; i += 2)
+            {
+                j1 = idx[i] - 1;
+                j2 = idx[i + 1] - 1;
+                dislin.tube3d(x[j1], y[j1], z[j1], x[j2], y[j2], z[j2], 0.5f, 5, 5);
+            }*/
+            dislin.zbffin();
+            dislin.disfin();
             return true;
         }
 
