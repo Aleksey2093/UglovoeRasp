@@ -96,8 +96,6 @@ namespace Угловое_распределение
         /// <returns>true - границы заданы, false - границы заданы ранее</returns>
         public static bool genMaxBoxXYZ(Random random, int n, double density)
         {
-            if (editing == false)
-                return false;
             int i, j;
             i = j = (int)(n * density);
             xmax = random.Next(i, j);
@@ -196,7 +194,7 @@ namespace Угловое_распределение
         rand = Math.Abs(rand);
         Random random = new Random(rand);*/
         start0:
-            int sumconnects = 0;
+            int sumconnects = 0; DateTime chetchik = DateTime.Now;
             Parallel.For(0, neutrons.Length, (i, statei) =>
             {
                 var t1 = neutrons[i];
@@ -217,9 +215,9 @@ namespace Угловое_распределение
                     }
                 }
             });
+            Console.WriteLine("time - "+ (DateTime.Now - chetchik).ToString());
             if (sumconnects == 0)
                 return neutrons;
-            //Parallel.For(0, neutrons.Length, (i, statei) =>
             for (int i = 0; i < neutrons.Length; i++)
             {
                 var t1 = neutrons[i];
@@ -263,7 +261,7 @@ namespace Угловое_распределение
                         goto ret3;
                     goto ret0;
                 }
-            }//);
+            }
             goto start0;
         }
 

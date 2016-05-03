@@ -18,11 +18,11 @@ namespace Угловое_распределение
             /// <summary>
             /// радиус нейтрона
             /// </summary>
-            public float x { get; set; }
+            public float x;
             /// <summary>
             /// количество одинаковых по радиусу нейтронов. Может использоваться в качестве процента
             /// </summary>
-            public float y { get; set; }
+            public float y;
         }
         /// <summary>
         /// Вызов окна отображающего 2д график функции
@@ -103,7 +103,7 @@ namespace Угловое_распределение
                 bool ifi = true;
                 for (int j = 0; j < list.Count; j++)
                 {
-                    if (Math.Abs(list[j].x - rdouble[i]) < 0.5)
+                    if (Math.Abs(list[j].x - rdouble[i]) < 0.1)
                     {
                         cor = list[j];
                         cor.y = cor.y + 1;
@@ -120,26 +120,33 @@ namespace Угловое_распределение
                     list.Add(cor);
                 }
             }
-            for (int i = 0; i < list.Count; i++)
+            //for (int i = 0; i < list.Count; i++)
+            Parallel.For(0,list.Count,(i,state)=>
             {
                 float p = list[i].y;
                 p = p * 100 / proc100;
-                cor = list[i];
-                cor.y = p;
-                list[i] = cor;
-            }
+                cord cordi = list[i];
+                cordi.y = p;
+                list[i] = cordi;
+            });
             float[] xline = new float[list.Count];
             float[] yline = new float[list.Count];
-
-            for (int i = 0; i < list.Count; i++)
+            float procmax = 0;
+            //for (int i = 0; i < list.Count; i++)
+            Parallel.For(0,list.Count,(i,state) =>
             {
                 xline[i] = i + 1;
                 yline[i] = list[i].y;
-            }
+                if (procmax < yline[i])
+                    procmax = yline[i];
+            });
+            procmax = (float)(procmax * 1.5);
             Thread thread = new Thread(delegate()
             {
-                retth:
-                bool ifi = TwoDGraphPaint(xline, yline, 0, list.Count, 0, (int)(list.Count / 3), 0, 30, 0, 10, "w(r) = ", "");
+            retth:
+                bool ifi = TwoDGraphPaint(xline, yline, 0, list.Count, 0, 
+                    (int)(list.Count / 3), 0, (int)procmax, 0, 
+                    (int)(procmax / 3), "w(r) = ", "");
                 if (ifi == false)
                     goto retth;
             });
