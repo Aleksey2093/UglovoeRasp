@@ -66,6 +66,13 @@ namespace Угловое_распределение
             String path = s.FileName;
         }
 
+        /// <summary>
+        /// Функция проверки корректности ввода входных параметров
+        /// </summary>
+        /// <param name="R">R большое</param>
+        /// <param name="density">Плотность</param>
+        /// <param name="grains">Количество зерен</param>
+        /// <returns></returns>
         private bool prov_R_Density_Grains_Correct_TextBox(ref double R, ref double density, ref double grains)
         {
             if (!double.TryParse(textBox1_R.Text, out R))
@@ -151,7 +158,16 @@ namespace Угловое_распределение
                 return;
             }
             int grains_int = (int)Math.Truncate(grains_double);
-            Neutron_struct[] neutron_box = neutron_class.randomInW_R(grains_int, R_double);
+            int rand = DateTime.Now.DayOfYear + DateTime.Now.Year +DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond - (int)grains_int;
+            rand = Math.Abs(rand);
+            Random random = new Random(rand);
+            ret: if (!BoxNeutoron.genMaxBoxXYZ(random, grains_int, density))
+            {
+                BoxNeutoron.editing = true;
+                goto ret;
+            }
+            Neutron_struct[] neutrons_box = neutron_class.randomInW_R(grains_int, R_double);
+            neutrons_box = neutron_class.randomGenXYZ(neutrons_box,true);
         }
     }
 }
