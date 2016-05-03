@@ -41,8 +41,8 @@
             this.загрузитьДанныеИзФайлаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сохранитьРезультатВФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ProgressBar1Расчет = new System.Windows.Forms.ToolStripProgressBar();
+            this.StatusLabel1Выполнение = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.checkBox1Kord = new System.Windows.Forms.CheckBox();
             this.checkBox1GraphW = new System.Windows.Forms.CheckBox();
@@ -195,29 +195,30 @@
             this.сохранитьРезультатВФайлToolStripMenuItem.Name = "сохранитьРезультатВФайлToolStripMenuItem";
             this.сохранитьРезультатВФайлToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this.сохранитьРезультатВФайлToolStripMenuItem.Text = "Сохранить результат в файл";
+            this.сохранитьРезультатВФайлToolStripMenuItem.Visible = false;
             this.сохранитьРезультатВФайлToolStripMenuItem.Click += new System.EventHandler(this.сохранитьРезультатВФайлToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripProgressBar1,
-            this.toolStripStatusLabel1});
+            this.ProgressBar1Расчет,
+            this.StatusLabel1Выполнение});
             this.statusStrip1.Location = new System.Drawing.Point(0, 201);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(380, 20);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // toolStripProgressBar1
+            // ProgressBar1Расчет
             // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 14);
+            this.ProgressBar1Расчет.Name = "ProgressBar1Расчет";
+            this.ProgressBar1Расчет.Size = new System.Drawing.Size(100, 14);
             // 
-            // toolStripStatusLabel1
+            // StatusLabel1Выполнение
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 15);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.StatusLabel1Выполнение.Name = "StatusLabel1Выполнение";
+            this.StatusLabel1Выполнение.Size = new System.Drawing.Size(64, 15);
+            this.StatusLabel1Выполнение.Text = "Ожидание";
             // 
             // flowLayoutPanel1
             // 
@@ -305,7 +306,7 @@
         private System.Windows.Forms.Button button1startmath;
         private System.Windows.Forms.CheckBox checkBox1Kord;
         private System.Windows.Forms.CheckBox checkBox1GraphW;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripProgressBar ProgressBar1Расчет;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabel1Выполнение;
     }
 }

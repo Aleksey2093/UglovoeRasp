@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -163,6 +164,8 @@ namespace Угловое_распределение
             {
                 return;
             }
+            StatusLabel1Выполнение.Text = "Выполняется расчет";
+            ProgressBar1Расчет.Value = 1;
             int grains_int = (int)Math.Truncate(grains_double);
             int rand = DateTime.Now.DayOfYear + DateTime.Now.Year + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond - (int)grains_int;
             rand = Math.Abs(rand);
@@ -173,18 +176,49 @@ namespace Угловое_распределение
                 goto ret;
             }
             Neutron_struct[] neutrons_box = neutron_class.randomInW_R(grains_int, R_double);
+            ProgressBar1Расчет.Value = 25;
             if (checkBox1GraphW.Checked)
             {
                 double[] rm = new double[grains_int];
-                Parallel.For(0,grains_int,(i,state)=>
+                Parallel.For(0, grains_int, (i, state) =>
                     {
                         rm[i] = neutrons_box[i].radius;
                     });
                 bool ifi = new GraphicsPaint().ShowGraphW(rm, R_double);
             }
+            ProgressBar1Расчет.Value = 50;
             if (checkBox1Kord.Checked)
             {
-                neutrons_box = neutron_class.randomGenXYZ(neutrons_box, true);
+                Thread thread = new Thread(delegate()
+                {
+                    Invoke(new MethodInvoker(() =>
+                        {
+                            StatusLabel1Выполнение.Text = "Расчет пространственных координат";
+                            ProgressBar1Расчет.Value = 60;
+                            button1startmath.Enabled = false;
+                        }));
+                    neutrons_box = neutron_class.randomGenXYZ(neutrons_box, true);
+                    Invoke(new MethodInvoker(() =>
+                    {
+                        ProgressBar1Расчет.Value = 100;
+                        StatusLabel1Выполнение.Text = "Расчет завершен";
+                        button1startmath.Enabled = true;
+                        neu = neutrons_box;
+                    }));
+                    Thread.Sleep(500);
+                    Invoke(new MethodInvoker(() =>
+                        {
+                            StatusLabel1Выполнение.Text = "Ожидание";
+                        }));
+                });
+                thread.Name = "Расчет координат";
+                thread.Start();
+            }
+            else
+            {
+                neu = neutrons_box;
+                ProgressBar1Расчет.Value = 100;
+                StatusLabel1Выполнение.Text = "Расчет завершен";
             }
         }
     }

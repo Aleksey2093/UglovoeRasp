@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Угловое_распределение
@@ -23,7 +24,22 @@ namespace Угловое_распределение
             /// </summary>
             public float y { get; set; }
         }
-
+        /// <summary>
+        /// Вызов окна отображающего 2д график функции
+        /// </summary>
+        /// <param name="xline">массив Х</param>
+        /// <param name="yline">массив У</param>
+        /// <param name="xmin">начало координат Х</param>
+        /// <param name="xmax">конец коррдинат Х</param>
+        /// <param name="xh1">первое отображаемое число деления на линии Х</param>
+        /// <param name="xh2">промежутки деления линии Х</param>
+        /// <param name="ymin">начало линии У</param>
+        /// <param name="ymax">конец линии У</param>
+        /// <param name="yh1">первое отображаемое число деления на линии У</param>
+        /// <param name="yh2">промежутки деления линии У</param>
+        /// <param name="name">названия функции</param>
+        /// <param name="title">названия окна</param>
+        /// <returns></returns>
         public bool TwoDGraphPaint(float[] xline, float[] yline, int xmin, int xmax, int xh1, int xh2, int ymin, int ymax, 
             int yh1, int yh2, string name, string title)
         {
@@ -68,6 +84,12 @@ namespace Угловое_распределение
             return true;
         }
 
+        /// <summary>
+        /// подготовливает к рисаниваю график
+        /// </summary>
+        /// <param name="rdouble">Массив радиусов</param>
+        /// <param name="R_double">R большое</param>
+        /// <returns>true - если выполнено успешно, false - ошибка при выполнении</returns>
         public bool ShowGraphW(double[] rdouble, double R_double)
         {
             List<cord> list = new List<cord>();
@@ -114,8 +136,16 @@ namespace Угловое_распределение
                 xline[i] = i + 1;
                 yline[i] = list[i].y;
             }
-            TwoDGraphPaint(xline, yline, 0, list.Count, 0, (int)(list.Count/3), 0, 30, 0, 10, "w(r)", "l1");
-            return true;
+            Thread thread = new Thread(delegate()
+            {
+                retth:
+                bool ifi = TwoDGraphPaint(xline, yline, 0, list.Count, 0, (int)(list.Count / 3), 0, 30, 0, 10, "w(r) = ", "");
+                if (ifi == false)
+                    goto retth;
+            });
+            thread.Name = "TwoGraph";
+            thread.Start();
+                return true;
         }
     }
 }
