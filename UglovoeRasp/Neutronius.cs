@@ -227,6 +227,8 @@ namespace Угловое_распределение
                 return true;
             if (restartmetod > Properties.Settings.Default.restarnfor)
                 return false;
+            else if (neutrons.Length >= 1000000)
+                new System.Threading.Thread(delegate() { MessageBox.Show("Проход разбиения по просранству №"+restartmetod + "\n Сумма соприкосновений " + sumconnects + ".", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
             for (int i = 0; i < neutrons.Length; i++)
             {
                 var neutron = neutrons[i];
@@ -258,7 +260,7 @@ namespace Угловое_распределение
         private Neutron_struct getNewValue(Neutron_struct neutron)
         {
             int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Hour - DateTime.Now.Minute - DateTime.Now.Millisecond - DateTime.Now.Second;
-            rand = Math.Abs(rand);
+            rand = Math.Abs(rand * (int)neutron.x * (int)neutron.y * (int)neutron.z * (int)neutron.radius);
             Random random = new Random(rand);
         ret1:
             neutron.x = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
