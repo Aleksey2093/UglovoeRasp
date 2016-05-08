@@ -22,5 +22,17 @@ namespace Угловое_распределение.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int restarnfor {
+            get {
+                return ((int)(this["restarnfor"]));
+            }
+            set {
+                this["restarnfor"] = value;
+            }
+        }
     }
 }

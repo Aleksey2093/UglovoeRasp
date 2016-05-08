@@ -19,9 +19,18 @@ namespace Угловое_распределение
             InitializeComponent();
         }
         Neutron_struct[] neu;
+        List<History> historylist;
+        public struct History
+        {
+            public double R;
+            public double density;
+            public int grains;
+            public Neutron_struct[] neutrons;
+        }
         private void MainWindow_Load(object sender, EventArgs e)
         {
             neu = new Neutron_struct[0];
+            historylist = new List<History>();
         }
 
         private void загрузитьДанныеИзФайлаToolStripMenuItem_Click(object sender, EventArgs e)
@@ -30,8 +39,7 @@ namespace Угловое_распределение
             {
                 OpenFileDialog op = new OpenFileDialog();
                 op.Multiselect = false;
-                op.Filter = "UGL файлы (*.ugl)|*.ugl|Все файлы (*.*)|*.*";
-                //Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*
+                op.Filter = "UGL файлы (*.ugldata)|*.ugldata|Все файлы (*.*)|*.*";
                 DialogResult res = op.ShowDialog();
                 if (res != System.Windows.Forms.DialogResult.OK)
                     return;
@@ -48,7 +56,7 @@ namespace Угловое_распределение
                         case "Плотность":
                             textBox2_Плотность.Text = node.InnerText;
                             break;
-                        case "Числозерен":
+                        case "Число зерен":
                             textBox3_count_зерен.Text = node.InnerText;
                             break;
                     }
@@ -61,16 +69,29 @@ namespace Угловое_распределение
             }
         }
 
-        private void сохранитьРезультатВФайлToolStripMenuItem_Click(object sender, EventArgs e)
+        private void сохранитьДанныеВФайлToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (neu.Length == 0)
-                return;
+            double rdouble = - 1, density = -1, grains = -1;
+            if (prov_R_Density_Grains_Correct_TextBox(ref rdouble, ref density, ref grains))
+            {
             SaveFileDialog s = new SaveFileDialog();
-            s.Filter = "UGL файлы (*.ugl)|*.ugl|Все файлы (*.*)|*.*";
-            s.DefaultExt = ".ugl";
+            s.Filter = "UGL файлы (*.ugldata)|*.ugldata|Все файлы (*.*)|*.*";
+            s.DefaultExt = ".ugldata";
             if (s.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
             String path = s.FileName;
+            List<string> lines = new List<string>();
+            lines.Add("<Uglovoe>");
+            lines.Add("'t<R>"+ rdouble +"</R>");
+            lines.Add("'t<Плотность>" + density + "</Плотность>");
+            lines.Add("'t<Число зерен>" + grains + "</Числозерен>");
+            lines.Add("</Uglovoe>");
+            }
+            else
+            {
+                MessageBox.Show("Не нельзя сохранить файл. Неверные исходные данные. Пожалуйста исправьте исходные данные и повторите попытку", "Ошибка сохранения", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
 
         /// <summary>
@@ -163,90 +184,12 @@ namespace Угловое_распределение
             button1startmath.Enabled = false;
             Thread thread = new Thread(delegate()
                 {
-                    Neutronius neutron_class = new Neutronius();
-                    double R_double = -1, density = -1, grains_double = -1;
-                    if (!prov_R_Density_Grains_Correct_TextBox(ref R_double, ref density, ref grains_double))
-                    {
-                        return;
-                    }
-                    Invoke(new MethodInvoker(() =>
-                    {
-                        StatusLabel1Выполнение.Text = "Выполняется расчет";
-                        ProgressBar1Расчет.Value = 1;
-                    }));
-                    int grains_int = (int)Math.Truncate(grains_double);
-                    int rand = DateTime.Now.DayOfYear + DateTime.Now.Year + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond - (int)grains_int;
-                    rand = Math.Abs(rand);
-                    Random random = new Random(rand);
-                ret: if (!BoxNeutoron.genMaxBoxXYZ(random, grains_int, density))
-                    {
-                        BoxNeutoron.editing = true;
-                        goto ret;
-                    }
-                    Neutron_struct[] neutrons_box = neutron_class.randomInW_R(grains_int, R_double);
-                    Invoke(new MethodInvoker(() =>
-                    {
-                        ProgressBar1Расчет.Value = 25;
-                    }));
-                    if (checkBox1GraphW.Checked)
-                    {
-                        double[] rm = new double[grains_int];
-                        Parallel.For(0, grains_int, (i, state) =>
-                            {
-                                rm[i] = neutrons_box[i].radius;
-                            });
-                        bool ifi = new GraphicsPaint().ShowGraphW(rm, R_double);
-                    }
-                    Invoke(new MethodInvoker(() =>
-                    {
-                        ProgressBar1Расчет.Value = 50;
-                    }));
-                    if (checkBox1Kord.Checked == false &&
-                        MessageBox.Show("Расчитать координаты нейтронов?", "", MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                    {
-                        Invoke(new MethodInvoker(() => { checkBox1Kord.Checked = true; }));
-                    }
-                    if (checkBox1Kord.Checked)
-                    {
-                        Invoke(new MethodInvoker(() =>
-                            {
-                                StatusLabel1Выполнение.Text = "Расчет пространственных координат";
-                                ProgressBar1Расчет.Value = 60;
-                            }));
-                        neutrons_box = neutron_class.randomGenXYZ(neutrons_box, true);
-                        GraphicsPaint graph = new GraphicsPaint();
-                        graph.ThreeDGraphPaint(neutrons_box, (int)BoxNeutoron.x, (int)BoxNeutoron.xmax, (int)BoxNeutoron.x,
-                            (int)BoxNeutoron.xmax / 4, (int)BoxNeutoron.y, (int)BoxNeutoron.ymax, (int)BoxNeutoron.y,
-                            (int)BoxNeutoron.ymax / 4, (int)BoxNeutoron.z, (int)BoxNeutoron.zmax, (int)BoxNeutoron.z, 
-                            (int)BoxNeutoron.zmax / 4, "", "");
-                    }
-
-                    Invoke(new MethodInvoker(() =>
-                    {
-                        neu = neutrons_box;
-                        ProgressBar1Расчет.Value = 100;
-                        StatusLabel1Выполнение.Text = "Расчет завершен";
-                    }));
-                    if (checkBox1Kord.Checked)
-                    {
-                        if (MessageBox.Show("Сохранить результаты расчетов в файле", "Сохранить как",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                            MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                        {
-                            Invoke(new MethodInvoker(() =>
-                            {
-                                saveToFile(R_double, density, grains_int, BoxNeutoron.x, BoxNeutoron.xmax,
-                                    BoxNeutoron.y, BoxNeutoron.ymax, BoxNeutoron.z, BoxNeutoron.zmax,
-                                    neutrons_box);
-                            }));
-                        }
-                    }
+                    MathПоИсходнымДанным();
                     Thread.Sleep(500);
                     Invoke(new MethodInvoker(() => { StatusLabel1Выполнение.Text = "Ожидание"; }));
                     Invoke(new MethodInvoker(() => { button1startmath.Enabled = true; }));
                 });
-            thread.Name = "Расчет координат";
+            thread.Name = "Math поток";
             thread.Start();
         }
 
@@ -269,38 +212,141 @@ namespace Угловое_распределение
             if (neutrons_box.Length == 0)
                 return;
             SaveFileDialog s = new SaveFileDialog();
-            s.Filter = "UGL файлы (*.ugl)|*.ugl|Все файлы (*.*)|*.*";
-            s.DefaultExt = ".ugl";
+            s.Filter = "UGL файлы (*.uglres)|*.uglres|Все файлы (*.*)|*.*";
+            s.DefaultExt = ".uglres";
             if (s.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
             String path = s.FileName;
             List<String> lineslist = new List<string>();
-            lineslist.Add("<variables>");
-            lineslist.Add(" <Rbig>" + R_double + "</Rbig>");
-            lineslist.Add(" <Density>" + density + "</Density>");
-            lineslist.Add(" <Grains>"+grains_int+"</Grains>");
-            lineslist.Add(" <BoxXmin>" + x + "</BoxXmin>");
-            lineslist.Add(" <BoxXmax>" + xmax + "</BoxXmax>");
-            lineslist.Add(" <BoxYmin>" + y + "</BoxYmin>");
-            lineslist.Add(" <BoxYmax>" + ymax + "</BoxYmax>");
-            lineslist.Add(" <BoxZmin>" + z + "</BoxZmin>");
-            lineslist.Add(" <BoxZmax>" + zmax + "</BoxZmax>");
+            lineslist.Add("<NeutronsMatrix>");
+            lineslist.Add("\t<Rbig>" + R_double + "</Rbig>");
+            lineslist.Add("\t<Density>" + density + "</Density>");
+            lineslist.Add("\t<Grains>" + grains_int + "</Grains>");
+            lineslist.Add("\t<BoxXmin>" + x + "</BoxXmin>");
+            lineslist.Add("\t<BoxXmax>" + xmax + "</BoxXmax>");
+            lineslist.Add("\t<BoxYmin>" + y + "</BoxYmin>");
+            lineslist.Add("\t<BoxYmax>" + ymax + "</BoxYmax>");
+            lineslist.Add("\t<BoxZmin>" + z + "</BoxZmin>");
+            lineslist.Add("\t<BoxZmax>" + zmax + "</BoxZmax>");
+            lineslist.Add("\t<Neutronlist>");
             for (int i = 0; i < neutrons_box.Length; i++)
             {
-                lineslist.Add(" <Neutron>");
-                lineslist.Add("  <KordX>" + neutrons_box[i].x + " </KordX>");
-                lineslist.Add("  <KordY>" + neutrons_box[i].y + " </KordY>");
-                lineslist.Add("  <KordZ>" + neutrons_box[i].z + " </KordZ>");
-                lineslist.Add("  <Radius>" + neutrons_box[i].radius + " </Radius>");
-                lineslist.Add(" </Neutron>");
+                if (neutrons_box[i].x != -1 || neutrons_box[i].y != -1 || neutrons_box[i].z != -1 || neutrons_box[i].radius != -1)
+                {
+                    lineslist.Add("\t\t<Neutron>");
+                    if (neutrons_box[i].x != -1)
+                        lineslist.Add("\t\t\t<KordX>" + neutrons_box[i].x + " </KordX>");
+                    if (neutrons_box[i].y != -1)
+                        lineslist.Add("\t\t\t<KordY>" + neutrons_box[i].y + " </KordY>");
+                    if (neutrons_box[i].z != -1)
+                        lineslist.Add("\t\t\t<KordZ>" + neutrons_box[i].z + " </KordZ>");
+                    if (neutrons_box[i].radius != -1)
+                        lineslist.Add("\t\t\t<Radius>" + neutrons_box[i].radius + " </Radius>");
+                    lineslist.Add("\t\t</Neutron>");
+                }
             }
-            lineslist.Add("</variables>");
+            lineslist.Add("\t<Neutronlist>");
+            lineslist.Add("</NeutronsMatrix>");
             System.IO.File.WriteAllLines(path, lineslist.ToArray());
         }
 
-        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        private void MainWindow_SizeChanged(object sender, EventArgs e)
         {
+            string n = textBox1_R.Font.Name;
+            textBox1_R.Font = new System.Drawing.Font(n, this.Height / 18);
+            textBox2_Плотность.Font = new System.Drawing.Font(n, this.Height / 18);
+            textBox3_count_зерен.Font = new System.Drawing.Font(n, this.Height / 18);
+        }
 
+        private void MathПоИсходнымДанным()
+        {
+            Neutronius neutron_class = new Neutronius();
+            double R_double = -1, density = -1, grains_double = -1;
+            if (!prov_R_Density_Grains_Correct_TextBox(ref R_double, ref density, ref grains_double))
+            {
+                return;
+            }
+            Invoke(new MethodInvoker(() =>
+            {
+                StatusLabel1Выполнение.Text = "Выполняется расчет";
+                ProgressBar1Расчет.Value = 1;
+            }));
+            int grains_int = (int)Math.Truncate(grains_double);
+            int rand = DateTime.Now.DayOfYear + DateTime.Now.Year + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond - (int)grains_int;
+            rand = Math.Abs(rand);
+            Random random = new Random(rand);
+        ret: if (!BoxNeutoron.genMaxBoxXYZ(random, grains_int, density))
+            {
+                BoxNeutoron.editing = true;
+                goto ret;
+            }
+            Neutron_struct[] neutrons_box = neutron_class.randomInW_R(grains_int, R_double);
+            Invoke(new MethodInvoker(() =>
+            {
+                ProgressBar1Расчет.Value = 25;
+            }));
+            if (checkBox1GraphW.Checked)
+            {
+                double[] rm = new double[grains_int];
+                Parallel.For(0, grains_int, (i, state) =>
+                {
+                    rm[i] = neutrons_box[i].radius;
+                });
+                bool ifi = new GraphicsPaint().ShowGraphW(rm, R_double);
+            }
+            Invoke(new MethodInvoker(() =>
+            {
+                ProgressBar1Расчет.Value = 50;
+            }));
+            if (checkBox1Kord.Checked == false &&
+                MessageBox.Show("Расчитать координаты нейтронов?", "", MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                Invoke(new MethodInvoker(() => { checkBox1Kord.Checked = true; }));
+            }
+            if (checkBox1Kord.Checked)
+            {
+                Invoke(new MethodInvoker(() =>
+                {
+                    StatusLabel1Выполнение.Text = "Расчет пространственных координат";
+                    ProgressBar1Расчет.Value = 60;
+                }));
+                bool ifi = neutron_class.randomGenXYZ(neutrons_box, true);
+                if (!ifi)
+                {
+
+                }
+                GraphicsPaint graph = new GraphicsPaint();
+                graph.ThreeDGraphPaint(neutrons_box, (int)BoxNeutoron.x, (int)BoxNeutoron.xmax, (int)BoxNeutoron.x,
+                    (int)BoxNeutoron.xmax / 4, (int)BoxNeutoron.y, (int)BoxNeutoron.ymax, (int)BoxNeutoron.y,
+                    (int)BoxNeutoron.ymax / 4, (int)BoxNeutoron.z, (int)BoxNeutoron.zmax, (int)BoxNeutoron.z,
+                    (int)BoxNeutoron.zmax / 4, "", "");
+            }
+
+            Invoke(new MethodInvoker(() =>
+            {
+                neu = neutrons_box;
+                ProgressBar1Расчет.Value = 100;
+                StatusLabel1Выполнение.Text = "Расчет завершен";
+            }));
+            if (checkBox1Kord.Checked)
+            {
+                if (MessageBox.Show("Сохранить результаты расчетов в файле", "Сохранить как",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                {
+                    Invoke(new MethodInvoker(() =>
+                    {
+                        saveToFile(R_double, density, grains_int, BoxNeutoron.x, BoxNeutoron.xmax,
+                            BoxNeutoron.y, BoxNeutoron.ymax, BoxNeutoron.z, BoxNeutoron.zmax,
+                            neutrons_box);
+                    }));
+                }
+            }
+            History item = new History();
+            item.R = R_double; item.density = density; item.grains = grains_int;
+            item.neutrons = neutrons_box;
+            historylist.Add(item);
         }
     }
 }

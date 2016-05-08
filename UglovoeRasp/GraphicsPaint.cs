@@ -11,7 +11,8 @@ namespace Угловое_распределение
     {
         public static int twoDgraph = 0;
         public static int threeDgraph = 0;
-        public static bool openWin = false;
+        public static bool openWinTwo = false;
+        public static bool openWinTree = false;
     }
     class GraphicsPaint
     {
@@ -45,11 +46,11 @@ namespace Угловое_распределение
         public bool TwoDGraphPaint(float[] xline, float[] yline, float xmin, float xmax, float xh1, float xh2, int ymin, int ymax, 
             int yh1, int yh2, string name, string title)
         {
-            while(GraphShowNowToWindow.openWin)
+            while (GraphShowNowToWindow.openWinTree)
             {
                 Thread.Sleep(300);
             }
-            GraphShowNowToWindow.openWin = true;
+            GraphShowNowToWindow.openWinTwo = true;
             if (GraphShowNowToWindow.twoDgraph > 4)
                 return false;
             // Определили формат вывода графика: xwin - вывод на экран
@@ -59,24 +60,17 @@ namespace Угловое_распределение
             dislin.disini();
             dislin.pagera();
             dislin.complx();
-
             dislin.axspos(450, 1800);
             dislin.axslen(2200, 1200);
-
             dislin.titlin(title, 1);
             dislin.titlin(name, 3);
-
             dislin.name("X-axis", "X");
             dislin.name("Y-axis", "Y");
             dislin.labdig(-1, "X");
             dislin.ticks(10, "Y");
             dislin.ticks(9, "X");
-
             dislin.graf(xmin, xmax, xh1, xh2, ymin, ymax, yh1, yh2);
-
             dislin.title();
-
-            //Построим кривую
             switch(GraphShowNowToWindow.twoDgraph)
             {
                 case 0:
@@ -95,23 +89,22 @@ namespace Угловое_распределение
                     dislin.color("white");
                     break;
             }
-
             GraphShowNowToWindow.twoDgraph++;
             dislin.curve(xline, yline, yline.Length);
             dislin.disfin();
             GraphShowNowToWindow.twoDgraph--;
-            GraphShowNowToWindow.openWin = false;
+            GraphShowNowToWindow.openWinTwo = false;
             return true;
         }
 
         public bool ThreeDGraphPaint(Neutron_struct[] neutros, int xmin, int xmax, int xh1, int xh2, int ymin, int ymax,
             int yh1, int yh2, int zmin, int zmax, int zh1, int zh2, string name, string title)
         {
-            while (GraphShowNowToWindow.openWin)
+            while (GraphShowNowToWindow.openWinTwo || GraphShowNowToWindow.openWinTree)
             {
                 Thread.Sleep(300);
             }
-            GraphShowNowToWindow.openWin = true;
+            GraphShowNowToWindow.openWinTree = true;
             int i, iret;
             float[] x = new float[neutros.Length];
             float[] y = new float[neutros.Length];
@@ -161,7 +154,7 @@ namespace Угловое_распределение
             dislin.matop3(0.0f, 1.0f, 0.0f, "diffuse");
             dislin.zbffin();
             dislin.disfin();
-            GraphShowNowToWindow.openWin = false;
+            GraphShowNowToWindow.openWinTree = false;
             return true;
         }
 
