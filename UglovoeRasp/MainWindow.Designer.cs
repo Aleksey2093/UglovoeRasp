@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBox1_R = new System.Windows.Forms.TextBox();
             this.textBox2_Плотность = new System.Windows.Forms.TextBox();
@@ -40,6 +41,8 @@
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.загрузитьДанныеИзФайлаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сохранитьРезультатВФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ProgressBar1Расчет = new System.Windows.Forms.ToolStripProgressBar();
             this.StatusLabel1Выполнение = new System.Windows.Forms.ToolStripStatusLabel();
@@ -47,8 +50,6 @@
             this.checkBox1Kord = new System.Windows.Forms.CheckBox();
             this.checkBox1GraphW = new System.Windows.Forms.CheckBox();
             this.button1startmath = new System.Windows.Forms.Button();
-            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -184,7 +185,7 @@
             this.загрузитьДанныеИзФайлаToolStripMenuItem,
             this.сохранитьРезультатВФайлToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 16);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 18);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // загрузитьДанныеИзФайлаToolStripMenuItem
@@ -201,6 +202,20 @@
             this.сохранитьРезультатВФайлToolStripMenuItem.Text = "Сохранить результат в файл";
             this.сохранитьРезультатВФайлToolStripMenuItem.Visible = false;
             this.сохранитьРезультатВФайлToolStripMenuItem.Click += new System.EventHandler(this.сохранитьРезультатВФайлToolStripMenuItem_Click);
+            // 
+            // настройкиToolStripMenuItem
+            // 
+            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
+            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(79, 18);
+            this.настройкиToolStripMenuItem.Text = "Настройки";
+            this.настройкиToolStripMenuItem.Click += new System.EventHandler(this.настройкиToolStripMenuItem_Click);
+            // 
+            // справкаToolStripMenuItem
+            // 
+            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
+            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 18);
+            this.справкаToolStripMenuItem.Text = "Справка";
+            this.справкаToolStripMenuItem.Click += new System.EventHandler(this.справкаToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -268,20 +283,6 @@
             this.button1startmath.UseVisualStyleBackColor = true;
             this.button1startmath.Click += new System.EventHandler(this.button1startmath_Click);
             // 
-            // настройкиToolStripMenuItem
-            // 
-            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(79, 16);
-            this.настройкиToolStripMenuItem.Text = "Настройки";
-            this.настройкиToolStripMenuItem.Click += new System.EventHandler(this.настройкиToolStripMenuItem_Click);
-            // 
-            // справкаToolStripMenuItem
-            // 
-            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 16);
-            this.справкаToolStripMenuItem.Text = "Справка";
-            this.справкаToolStripMenuItem.Click += new System.EventHandler(this.справкаToolStripMenuItem_Click);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -289,6 +290,7 @@
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(380, 187);
             this.Controls.Add(this.tableLayoutPanel2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximumSize = new System.Drawing.Size(396, 226);
             this.MinimumSize = new System.Drawing.Size(396, 226);

@@ -97,7 +97,7 @@ namespace Угловое_распределение
         public static bool genMaxBoxXYZ(Random random, int n, double density)
         {
             int i, j;
-            i = j = (int)(n * density);
+            i = j = (int)(n/density);
             xmax = random.Next(i, j);
             ymax = random.Next(i, j);
             zmax = random.Next(i, j);
@@ -122,7 +122,6 @@ namespace Угловое_распределение
             rand = Math.Abs(rand);
             Random random = new Random();
             Neutron_struct[] neutrons = new Neutron_struct[n];
-            //Parallel.For(0, n, (i, state) =>
             double r_r = 0;
             for (int i = 0; i < n; i++)
             {
@@ -156,7 +155,6 @@ namespace Угловое_распределение
             rand -= DateTime.Now.DayOfYear;
             rand = Math.Abs(rand);
             Random random = new Random(rand);
-            //for (int i = 0; i < neutrons.Length; i++)
             Parallel.For(0, neutrons.Length, (i, statei) =>
             {
                 random = new Random(rand + i);
@@ -166,17 +164,17 @@ namespace Угловое_распределение
                 double xx = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
                 xx += random.NextDouble();
                 neutrons[i].x = xx;
-                if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
+                if (!getBoolProvKordNeuBox(neutrons[i].x, neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
                     goto ret1;
             ret2:
                 neutrons[i].y = random.Next((int)BoxNeutoron.y, (int)BoxNeutoron.ymax);
                 neutrons[i].y += random.NextDouble();
-                if (!getBoolProvKordNeuBox(ref neutrons[i].y, ref neutrons[i].radius, BoxNeutoron.y, BoxNeutoron.ymax))
+                if (!getBoolProvKordNeuBox(neutrons[i].y, neutrons[i].radius, BoxNeutoron.y, BoxNeutoron.ymax))
                     goto ret2;
             ret3:
                 neutrons[i].z = random.Next((int)BoxNeutoron.z, (int)BoxNeutoron.zmax);
                 neutrons[i].z += random.NextDouble();
-                if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
+                if (!getBoolProvKordNeuBox(neutrons[i].x, neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
                     goto ret3;
                 if (ifi)
                     goto ret0;
@@ -190,37 +188,34 @@ namespace Угловое_распределение
 
         private Neutron_struct[] getNeutoronsNotConnect(Neutron_struct[] neutrons)
         {
-        /*int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Hour - DateTime.Now.Minute - DateTime.Now.Millisecond - DateTime.Now.Second;
-        rand = Math.Abs(rand);
-        Random random = new Random(rand);*/
         start0:
             int sumconnects = 0; DateTime chetchik = DateTime.Now;
-            Parallel.For(0, neutrons.Length, (i, statei) =>
+            Parallel.For(0, neutrons.Length - 1, (i, statei) =>
+            //for (int i = 0; i < neutrons.Length-1;i++ )
             {
-                var t1 = neutrons[i];
-                for (int j=0;j<neutrons.Length;j++)
+                var neutron = neutrons[i];
+                Parallel.For(i + 1, neutrons.Length, (j, statej) =>
+                //for (int j = i + 1; j < neutrons.Length;j++ )
                 {
-                    if (j != i)
+                    var t2 = neutrons[j];
+                    double L = Math.Pow((t2.x - neutron.x), 2)
+                        + Math.Pow((t2.y - neutron.y), 2)
+                        + Math.Pow((t2.z - neutron.z), 2);
+                    L = Math.Sqrt(L);
+                    if (Math.Abs(L) < neutron.radius + t2.radius)
                     {
-                        var t2 = neutrons[j];
-                        double L = Math.Pow((t2.x - t1.x), 2)
-                            + Math.Pow((t2.y - t1.y), 2)
-                            + Math.Pow((t2.z - t1.z), 2);
-                        L = Math.Sqrt(L);
-                        if (Math.Abs(L) < t1.radius + t2.radius)
-                        {
-                            sumconnects++;
-                            statei.Break();
-                        }
+                        sumconnects++;
+                        statei.Break();
                     }
-                }
+                });
             });
-            Console.WriteLine("time - "+ (DateTime.Now - chetchik).ToString());
+            Console.WriteLine("Подсчет суммы " + sumconnects + " занял - " + (DateTime.Now - chetchik).ToString());
+            chetchik = DateTime.Now;
             if (sumconnects == 0)
                 return neutrons;
             for (int i = 0; i < neutrons.Length; i++)
             {
-                var t1 = neutrons[i];
+                var neutron = neutrons[i];
             ret0:
                 bool ifi = false;
                 Parallel.For(0, neutrons.Length, (j, statej) =>
@@ -228,11 +223,11 @@ namespace Угловое_распределение
                         if (j != i)
                         {
                             var t2 = neutrons[j];
-                            double L = Math.Pow((t2.x - t1.x), 2)
-                                + Math.Pow((t2.y - t1.y), 2)
-                                + Math.Pow((t2.z - t1.z), 2);
+                            double L = Math.Pow((t2.x - neutron.x), 2)
+                                + Math.Pow((t2.y - neutron.y), 2)
+                                + Math.Pow((t2.z - neutron.z), 2);
                             L = Math.Sqrt(L);
-                            if (L < t1.radius + t2.radius)
+                            if (L < neutron.radius + t2.radius)
                             {
                                 ifi = true;
                                 statej.Break();
@@ -245,23 +240,24 @@ namespace Угловое_распределение
                     rand = Math.Abs(rand);
                     Random random = new Random(rand);
                 ret1:
-                    neutrons[i].x = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
-                    neutrons[i].x += random.NextDouble();
-                    if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
+                    neutron.x = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
+                    neutron.x += random.NextDouble();
+                    if (!getBoolProvKordNeuBox(neutrons[i].x, neutron.radius, BoxNeutoron.x, BoxNeutoron.xmax))
                         goto ret1;
                 ret2:
-                    neutrons[i].y = random.Next((int)BoxNeutoron.y, (int)BoxNeutoron.ymax);
-                    neutrons[i].y += random.NextDouble();
-                    if (!getBoolProvKordNeuBox(ref neutrons[i].y, ref neutrons[i].radius, BoxNeutoron.y, BoxNeutoron.ymax))
+                    neutron.y = random.Next((int)BoxNeutoron.y, (int)BoxNeutoron.ymax);
+                    neutron.y += random.NextDouble();
+                    if (!getBoolProvKordNeuBox(neutrons[i].y, neutron.radius, BoxNeutoron.y, BoxNeutoron.ymax))
                         goto ret2;
                 ret3:
-                    neutrons[i].z = random.Next((int)BoxNeutoron.z, (int)BoxNeutoron.zmax);
-                    neutrons[i].z += random.NextDouble();
-                    if (!getBoolProvKordNeuBox(ref neutrons[i].x, ref neutrons[i].radius, BoxNeutoron.x, BoxNeutoron.xmax))
+                    neutron.z = random.Next((int)BoxNeutoron.z, (int)BoxNeutoron.zmax);
+                    neutron.z += random.NextDouble();
+                    if (!getBoolProvKordNeuBox(neutron.x, neutron.radius, BoxNeutoron.x, BoxNeutoron.xmax))
                         goto ret3;
                     goto ret0;
                 }
             }
+            Console.WriteLine("Проверка пересечений заняля - " + (DateTime.Now - chetchik).ToString());
             goto start0;
         }
 
@@ -273,7 +269,7 @@ namespace Угловое_распределение
         /// <param name="min">минимальманое значение пространства по этой координате</param>
         /// <param name="max">максимальное значение пространства по этой координате</param>
         /// <returns>true - все хорошо, false - выходит за границу </returns>
-        private bool getBoolProvKordNeuBox(ref double kord, ref double radius, double min, double max)
+        private bool getBoolProvKordNeuBox(double kord, double radius, double min, double max)
         {
             if (kord >= min && kord <= max)
             {

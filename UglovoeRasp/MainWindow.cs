@@ -311,7 +311,7 @@ namespace Угловое_распределение
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.Close();
+
         }
     }
 }
