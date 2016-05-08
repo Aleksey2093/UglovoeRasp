@@ -41,8 +41,6 @@
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.загрузитьДанныеИзФайлаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сохранитьРезультатВФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ProgressBar1Расчет = new System.Windows.Forms.ToolStripProgressBar();
             this.StatusLabel1Выполнение = new System.Windows.Forms.ToolStripStatusLabel();
@@ -59,6 +57,7 @@
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble;
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -76,34 +75,34 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(374, 104);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(626, 378);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // textBox1_R
             // 
             this.textBox1_R.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1_R.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox1_R.Location = new System.Drawing.Point(190, 3);
+            this.textBox1_R.Location = new System.Drawing.Point(317, 6);
             this.textBox1_R.Name = "textBox1_R";
-            this.textBox1_R.Size = new System.Drawing.Size(181, 29);
+            this.textBox1_R.Size = new System.Drawing.Size(303, 29);
             this.textBox1_R.TabIndex = 1;
             // 
             // textBox2_Плотность
             // 
             this.textBox2_Плотность.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox2_Плотность.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox2_Плотность.Location = new System.Drawing.Point(190, 38);
+            this.textBox2_Плотность.Location = new System.Drawing.Point(317, 44);
             this.textBox2_Плотность.Name = "textBox2_Плотность";
-            this.textBox2_Плотность.Size = new System.Drawing.Size(181, 29);
+            this.textBox2_Плотность.Size = new System.Drawing.Size(303, 29);
             this.textBox2_Плотность.TabIndex = 2;
             // 
             // textBox3_count_зерен
             // 
-            this.textBox3_count_зерен.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox3_count_зерен.Dock = System.Windows.Forms.DockStyle.Top;
             this.textBox3_count_зерен.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox3_count_зерен.Location = new System.Drawing.Point(190, 73);
+            this.textBox3_count_зерен.Location = new System.Drawing.Point(317, 82);
             this.textBox3_count_зерен.Name = "textBox3_count_зерен";
-            this.textBox3_count_зерен.Size = new System.Drawing.Size(181, 29);
+            this.textBox3_count_зерен.Size = new System.Drawing.Size(303, 29);
             this.textBox3_count_зерен.TabIndex = 3;
             // 
             // label1
@@ -113,9 +112,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Location = new System.Drawing.Point(6, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(181, 35);
+            this.label1.Size = new System.Drawing.Size(302, 35);
             this.label1.TabIndex = 0;
             this.label1.Text = "R";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -127,23 +126,22 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(3, 35);
+            this.label2.Location = new System.Drawing.Point(6, 41);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(181, 35);
+            this.label2.Size = new System.Drawing.Size(302, 35);
             this.label2.TabIndex = 1;
             this.label2.Text = "Плотность";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(3, 70);
+            this.label3.Location = new System.Drawing.Point(6, 79);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(181, 35);
+            this.label3.Size = new System.Drawing.Size(302, 24);
             this.label3.TabIndex = 2;
             this.label3.Text = "Число зерен";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -163,19 +161,17 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(380, 187);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(632, 461);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.файлToolStripMenuItem,
-            this.настройкиToolStripMenuItem,
-            this.справкаToolStripMenuItem});
+            this.файлToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(380, 22);
+            this.menuStrip1.Size = new System.Drawing.Size(632, 22);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -203,40 +199,26 @@
             this.сохранитьРезультатВФайлToolStripMenuItem.Visible = false;
             this.сохранитьРезультатВФайлToolStripMenuItem.Click += new System.EventHandler(this.сохранитьРезультатВФайлToolStripMenuItem_Click);
             // 
-            // настройкиToolStripMenuItem
-            // 
-            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(79, 18);
-            this.настройкиToolStripMenuItem.Text = "Настройки";
-            this.настройкиToolStripMenuItem.Click += new System.EventHandler(this.настройкиToolStripMenuItem_Click);
-            // 
-            // справкаToolStripMenuItem
-            // 
-            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 18);
-            this.справкаToolStripMenuItem.Text = "Справка";
-            this.справкаToolStripMenuItem.Click += new System.EventHandler(this.справкаToolStripMenuItem_Click);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ProgressBar1Расчет,
             this.StatusLabel1Выполнение});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 167);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 439);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(380, 20);
+            this.statusStrip1.Size = new System.Drawing.Size(632, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // ProgressBar1Расчет
             // 
             this.ProgressBar1Расчет.Name = "ProgressBar1Расчет";
-            this.ProgressBar1Расчет.Size = new System.Drawing.Size(100, 14);
+            this.ProgressBar1Расчет.Size = new System.Drawing.Size(100, 16);
             // 
             // StatusLabel1Выполнение
             // 
             this.StatusLabel1Выполнение.Name = "StatusLabel1Выполнение";
-            this.StatusLabel1Выполнение.Size = new System.Drawing.Size(64, 15);
+            this.StatusLabel1Выполнение.Size = new System.Drawing.Size(64, 17);
             this.StatusLabel1Выполнение.Text = "Ожидание";
             // 
             // flowLayoutPanel1
@@ -246,17 +228,19 @@
             this.flowLayoutPanel1.Controls.Add(this.checkBox1GraphW);
             this.flowLayoutPanel1.Controls.Add(this.button1startmath);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 135);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 409);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(374, 29);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(626, 27);
             this.flowLayoutPanel1.TabIndex = 4;
             // 
             // checkBox1Kord
             // 
             this.checkBox1Kord.AutoSize = true;
+            this.checkBox1Kord.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.checkBox1Kord.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.checkBox1Kord.Location = new System.Drawing.Point(3, 3);
             this.checkBox1Kord.Name = "checkBox1Kord";
-            this.checkBox1Kord.Size = new System.Drawing.Size(117, 17);
+            this.checkBox1Kord.Size = new System.Drawing.Size(153, 21);
             this.checkBox1Kord.TabIndex = 3;
             this.checkBox1Kord.Text = "Расчет координат";
             this.checkBox1Kord.UseVisualStyleBackColor = true;
@@ -266,18 +250,21 @@
             this.checkBox1GraphW.AutoSize = true;
             this.checkBox1GraphW.Checked = true;
             this.checkBox1GraphW.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1GraphW.Location = new System.Drawing.Point(126, 3);
+            this.checkBox1GraphW.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.checkBox1GraphW.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBox1GraphW.Location = new System.Drawing.Point(162, 3);
             this.checkBox1GraphW.Name = "checkBox1GraphW";
-            this.checkBox1GraphW.Size = new System.Drawing.Size(87, 17);
+            this.checkBox1GraphW.Size = new System.Drawing.Size(110, 21);
             this.checkBox1GraphW.TabIndex = 4;
             this.checkBox1GraphW.Text = "График W(r)";
             this.checkBox1GraphW.UseVisualStyleBackColor = true;
             // 
             // button1startmath
             // 
-            this.button1startmath.Location = new System.Drawing.Point(219, 3);
+            this.button1startmath.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.button1startmath.Location = new System.Drawing.Point(278, 3);
             this.button1startmath.Name = "button1startmath";
-            this.button1startmath.Size = new System.Drawing.Size(145, 23);
+            this.button1startmath.Size = new System.Drawing.Size(90, 21);
             this.button1startmath.TabIndex = 2;
             this.button1startmath.Text = "Расчет";
             this.button1startmath.UseVisualStyleBackColor = true;
@@ -288,12 +275,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(380, 187);
+            this.ClientSize = new System.Drawing.Size(632, 461);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximumSize = new System.Drawing.Size(396, 226);
-            this.MinimumSize = new System.Drawing.Size(396, 226);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(3960, 2400);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(396, 240);
             this.Name = "MainWindow";
             this.Text = "MainWindow";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
@@ -333,7 +322,5 @@
         private System.Windows.Forms.CheckBox checkBox1GraphW;
         private System.Windows.Forms.ToolStripProgressBar ProgressBar1Расчет;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel1Выполнение;
-        private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
     }
 }

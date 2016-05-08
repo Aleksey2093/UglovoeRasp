@@ -298,17 +298,6 @@ namespace Угловое_распределение
             System.IO.File.WriteAllLines(path, lineslist.ToArray());
         }
 
-        private void настройкиToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GraphicsPaint a = new GraphicsPaint();
-            a.ThreeDGraphPaint(null,1,1,1,1,1,1,1,1,1,1,1,1,"","");
-        }
-
-        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
 
