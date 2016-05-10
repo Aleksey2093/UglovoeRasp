@@ -257,6 +257,11 @@ namespace Угловое_распределение
             goto start0;
         }
 
+        /// <summary>
+        /// получить новое значение координат нейтрона. Возвращает нейтрон.
+        /// </summary>
+        /// <param name="neutron">Нейтрон координаты которого нужно изменить</param>
+        /// <returns></returns>
         private Neutron_struct getNewValue(Neutron_struct neutron)
         {
             int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Hour - DateTime.Now.Minute - DateTime.Now.Millisecond - DateTime.Now.Second;
