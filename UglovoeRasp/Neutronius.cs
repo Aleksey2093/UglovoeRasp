@@ -204,17 +204,15 @@ namespace Угловое_распределение
         start0:
             restartmetod++;
             int sumconnects = 0; DateTime chetchik = DateTime.Now;
-            Parallel.For(0, neutrons.Length - 1, (i, statei) =>
+            Parallel.For(0, neutrons.Length-1, (i, statei) =>
             {
-                var neutron = neutrons[i];
                 Parallel.For(i + 1, neutrons.Length, (j, statej) =>
                 {
-                    var t2 = neutrons[j];
-                    double L = Math.Pow((t2.x - neutron.x), 2)
-                        + Math.Pow((t2.y - neutron.y), 2)
-                        + Math.Pow((t2.z - neutron.z), 2);
+                    double L = Math.Pow((neutrons[j].x - neutrons[i].x), 2)
+                        + Math.Pow((neutrons[j].y - neutrons[i].y), 2)
+                        + Math.Pow((neutrons[j].z - neutrons[i].z), 2);
                     L = Math.Sqrt(L);
-                    if (Math.Abs(L) < neutron.radius + t2.radius)
+                    if (Math.Abs(L) < neutrons[i].radius + neutrons[j].radius)
                     {
                         sumconnects++;
                         statei.Break();
@@ -222,6 +220,7 @@ namespace Угловое_распределение
                 });
             });
             Console.WriteLine("Подсчет суммы " + sumconnects + " занял - " + (DateTime.Now - chetchik).ToString());
+            new System.Threading.Thread(delegate() { MessageBox.Show("Подсчет суммы " + sumconnects + " занял - " + (DateTime.Now - chetchik).ToString(), "", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
             chetchik = DateTime.Now;
             if (sumconnects == 0)
                 return true;
