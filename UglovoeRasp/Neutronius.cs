@@ -210,12 +210,11 @@ namespace Угловое_распределение
                 return false;
             else if (neutrons.Length >= 1000000)
                 new System.Threading.Thread(delegate() { MessageBox.Show("Проход разбиения по просранству №" + restartmetod + ".", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
-            //var neutron = neutrons[index];
-        ret0:
+            int restartswap = 0;
+            ret0:
             bool ifi = false;
             Parallel.For(index + 1, neutrons.Length, (j, statej) =>
                 {
-                    //neutrons[j];
                     double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
                         + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
                         + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
@@ -243,6 +242,9 @@ namespace Угловое_распределение
             }
             if (ifi)
             {
+                restartswap++;
+                if (restartswap > Properties.Settings.Default.restarnfor)
+                    goto start0;
                 neutrons[index] = getNewValue(neutrons[index]);
                 goto ret0;
             }
