@@ -162,18 +162,25 @@ namespace Угловое_распределение
             }
             return true;
         err1:
-            textBox1_R.SelectAll();
-            textBox1_R.Focus();
+            Invoke(new MethodInvoker(() =>
+                {
+                    textBox1_R.SelectAll();
+                    textBox1_R.Focus();
+                }));
             return false;
         err2:
-
-            textBox2_Плотность.SelectAll();
-            textBox2_Плотность.Focus();
+            Invoke(new MethodInvoker(() =>
+            {
+                textBox2_Плотность.SelectAll();
+                textBox2_Плотность.Focus();
+            }));
             return false;
         err3:
-
-            textBox3_count_зерен.SelectAll();
-            textBox3_count_зерен.Focus();
+            Invoke(new MethodInvoker(() =>
+            {
+                textBox3_count_зерен.SelectAll();
+                textBox3_count_зерен.Focus();
+            }));
             return false;
         }
 
@@ -314,7 +321,8 @@ namespace Угловое_распределение
                 bool ifi = neutron_class.randomGenXYZ(neutrons_box, true);
                 if (!ifi)
                 {
-
+                    MessageBox.Show("Невозможно создать пространство нейтронов для текущих исходных данных. Попробуйте произвести рассчет заново","Информация",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 }
                 GraphicsPaint graph = new GraphicsPaint();
                 graph.ThreeDGraphPaint(neutrons_box, (int)BoxNeutoron.x, (int)BoxNeutoron.xmax, (int)BoxNeutoron.x,
