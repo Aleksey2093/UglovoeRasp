@@ -81,6 +81,13 @@ namespace Угловое_распределение
     }
     class Neutronius
     {
+        private static MainWindow mainwindow;
+
+        public void setParentWindow(MainWindow mw)
+        {
+            mainwindow = mw;
+        }
+
         /// <summary>
         /// Генерирует массив слуайных радиусов
         /// </summary>
@@ -189,23 +196,23 @@ namespace Угловое_распределение
                     {
                         sumconnects = true;
                         index = i;
+                        statei.Break();
                         break;
                     }
                 }
-                if (sumconnects)
-                    statei.Break();
             });
             Console.WriteLine("Подсчет суммы занял - " + (DateTime.Now - chetchik).ToString());
             chetchik = DateTime.Now;
-            if (sumconnects == false)
-            {
-                if (index != 0)
+            mainwindow.newValueProgresBar();
+                if (sumconnects == false)
                 {
-                    index = 0;
-                    goto start0;
+                    if (index != 0)
+                    {
+                        index = 0;
+                        goto start0;
+                    }
+                    return true;
                 }
-                return true;
-            }
             if (restartmetod > Properties.Settings.Default.restarnfor)
                 return false;
             else if (neutrons.Length >= 1000000)

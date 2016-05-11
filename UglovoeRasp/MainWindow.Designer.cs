@@ -336,7 +336,6 @@
         private System.Windows.Forms.CheckBox checkBox1GraphW;
         private System.Windows.Forms.Button button1startmath;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripProgressBar ProgressBar1Расчет;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel1Выполнение;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox textBox1_R;
@@ -346,5 +345,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ToolTip toolTip1;
+        public System.Windows.Forms.ToolStripProgressBar ProgressBar1Расчет;
     }
 }

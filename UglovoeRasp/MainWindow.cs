@@ -265,9 +265,18 @@ namespace Угловое_распределение
             textBox3_count_зерен.Font = new System.Drawing.Font(n, this.Height / 18);
         }
 
+        public void newValueProgresBar()
+        {
+            if (ProgressBar1Расчет.Value < 80)
+                Invoke(new MethodInvoker(() => { ProgressBar1Расчет.Value++; }));
+            else
+                Invoke(new MethodInvoker(() => { ProgressBar1Расчет.Value = 40; }));
+        }
+
         private void MathПоИсходнымДанным()
         {
             Neutronius neutron_class = new Neutronius();
+            neutron_class.setParentWindow(this);
             double R_double = -1, density = -1, grains_double = -1;
             if (!prov_R_Density_Grains_Correct_TextBox(ref R_double, ref density, ref grains_double))
             {
@@ -300,7 +309,7 @@ namespace Угловое_распределение
             }
             Invoke(new MethodInvoker(() =>
             {
-                ProgressBar1Расчет.Value = 50;
+                ProgressBar1Расчет.Value = 40;
             }));
             if (checkBox1Kord.Checked == false &&
                 MessageBox.Show("Рассчитать координаты нейтронов?", "", MessageBoxButtons.YesNo,
@@ -313,7 +322,7 @@ namespace Угловое_распределение
                 Invoke(new MethodInvoker(() =>
                 {
                     StatusLabel1Выполнение.Text = "Расчет пространственных координат";
-                    ProgressBar1Расчет.Value = 60;
+                    ProgressBar1Расчет.Value = 80;
                 }));
                 bool ifi = neutron_class.randomGenXYZ(neutrons_box, true);
                 if (!ifi)
