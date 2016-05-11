@@ -177,7 +177,7 @@ namespace Угловое_распределение
                 bool ifi = true;
                 for (int j = 0; j < list.Count; j++)
                 {
-                    if (Math.Abs(list[j].x - rdouble[i]) < 0.1)
+                    if (Math.Abs(list[j].x - rdouble[i]) < 0.9)
                     {
                         cor = list[j];
                         cor.y = cor.y + 1;
@@ -242,8 +242,8 @@ namespace Угловое_распределение
             {
             retth:
                 bool ifi = TwoDGraphPaint(xline, yline, min, max, min,
-                    (float)(max / 5), 0, (int)procmax, 0,
-                    (int)(procmax / 3), "w(r) = ", "");
+                    (float)(max / 10), 0, (int)procmax, 0,
+                    (int)(procmax / 10), "w(r) = ", "");
                 if (ifi == false)
                     goto retth;
             });

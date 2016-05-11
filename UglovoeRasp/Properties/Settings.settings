@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="restarnfor" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">100</Value>
+      <Value Profile="(Default)">10000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

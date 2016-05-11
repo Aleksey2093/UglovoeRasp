@@ -60,7 +60,7 @@ namespace Угловое_распределение
         static public double xmax
         {
             get { return x1; }
-            set { if (edit) x1 = value; }
+            set { x1 = value; }
         }
         /// <summary>
         /// Возвращает или задает Ymax конца координат. Доступно для чтения и записи.
@@ -68,7 +68,7 @@ namespace Угловое_распределение
         static public double ymax
         {
             get { return y1; }
-            set { if (edit) y1 = value; }
+            set { y1 = value; }
         }
         /// <summary>
         /// Возвращает или задает Zmax конца координат. Доступно для чтенения и записи.
@@ -76,35 +76,7 @@ namespace Угловое_распределение
         static public double zmax
         {
             get { return z1; }
-            set { if (edit) z1 = value; }
-        }
-
-        static bool edit = true;
-
-        public static bool editing
-        {
-            get { return edit; }
-            set { edit = value; }
-        }
-
-        /// <summary>
-        /// Случайным образом создает границы для пространства в котором находятся нейтроны
-        /// </summary>
-        /// <param name="random">Генератор псевдослучайных чисел</param>
-        /// <param name="n">Число зерен</param>
-        /// <param name="density">Плость зерен</param>
-        /// <returns>true - границы заданы, false - границы заданы ранее</returns>
-        public static bool genMaxBoxXYZ(Random random, int n, double density)
-        {
-            if (edit == false)
-                return false;
-            int i, j;
-            i = j = (int)(n/density);
-            xmax = random.Next(i, j);
-            ymax = random.Next(i, j);
-            zmax = random.Next(i, j);
-            editing = false;
-            return true;
+            set { z1 = value; }
         }
     }
     class Neutronius
@@ -132,7 +104,7 @@ namespace Угловое_распределение
                 if (r_r > 5)
                     r_r = 0;
             reti:
-            double _r = random.Next(0,r_r) + random.NextDouble(); 
+            double _r = random.Next(0,r_r) + Math.Round(random.NextDouble(),4); 
                 double w_r = ((3 * Math.Pow(_r, 2)) / (Math.Pow(dr, 3)));
                 double w_ = Math.Exp(-Math.Pow((_r / dr), 3));
                 w_r = w_r * w_;
@@ -201,13 +173,12 @@ namespace Угловое_распределение
         private bool getNeutoronsNotConnect(Neutron_struct[] neutrons)
         {
             int restartmetod = 0;
+            int index = 0;
         start0:
             restartmetod++;
             bool sumconnects = false; DateTime chetchik = DateTime.Now;
-            int index = -1;
-            Parallel.For(0, neutrons.Length - 1, (i, statei) =>
+            Parallel.For(index, neutrons.Length - 1, (i, statei) =>
             {
-                //Parallel.For(i + 1, neutrons.Length, (j, statej) =>
                 for (int j=i+1;j<neutrons.Length;j++)
                 {
                     double L = Math.Pow((neutrons[j].x - neutrons[i].x), 2)
@@ -220,37 +191,59 @@ namespace Угловое_распределение
                         index = i;
                         break;
                     }
-                }//);
+                }
                 if (sumconnects)
                     statei.Break();
             });
             Console.WriteLine("Подсчет суммы занял - " + (DateTime.Now - chetchik).ToString());
             chetchik = DateTime.Now;
             if (sumconnects == false)
+            {
+                if (index != 0)
+                {
+                    index = 0;
+                    goto start0;
+                }
                 return true;
+            }
             if (restartmetod > Properties.Settings.Default.restarnfor)
                 return false;
             else if (neutrons.Length >= 1000000)
                 new System.Threading.Thread(delegate() { MessageBox.Show("Проход разбиения по просранству №" + restartmetod + ".", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
-            var neutron = neutrons[index];
+            //var neutron = neutrons[index];
         ret0:
             bool ifi = false;
             Parallel.For(index + 1, neutrons.Length, (j, statej) =>
                 {
-                    var t2 = neutrons[j];
-                    double L = Math.Pow((t2.x - neutron.x), 2)
-                        + Math.Pow((t2.y - neutron.y), 2)
-                        + Math.Pow((t2.z - neutron.z), 2);
+                    //neutrons[j];
+                    double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
+                        + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
+                        + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
                     L = Math.Sqrt(L);
-                    if (L < neutron.radius + t2.radius)
+                    if (L < neutrons[index].radius + neutrons[j].radius)
                     {
                         ifi = true;
                         statej.Break();
                     }
                 });
+            if (ifi == false)
+            {
+                Parallel.For(0, index, (j, statej) =>
+                {
+                    double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
+                        + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
+                        + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
+                    L = Math.Sqrt(L);
+                    if (L < neutrons[index].radius + neutrons[j].radius)
+                    {
+                        ifi = true;
+                        statej.Break();
+                    }
+                });
+            }
             if (ifi)
             {
-                neutron = getNewValue(neutron);
+                neutrons[index] = getNewValue(neutrons[index]);
                 goto ret0;
             }
             Console.WriteLine("Проверка пересечений заняла - " + (DateTime.Now - chetchik).ToString());
@@ -264,8 +257,9 @@ namespace Угловое_распределение
         /// <returns></returns>
         private Neutron_struct getNewValue(Neutron_struct neutron)
         {
-            int rand = DateTime.Now.Year - DateTime.Now.Day - DateTime.Now.Hour - DateTime.Now.Minute - DateTime.Now.Millisecond - DateTime.Now.Second;
-            rand = Math.Abs(rand * (int)neutron.x * (int)neutron.y * (int)neutron.z * (int)neutron.radius);
+            int rand = DateTime.Now.DayOfYear + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second;
+            rand = Math.Abs(rand + (int)neutron.x + (int)neutron.y + (int)neutron.z + (int)neutron.radius);
+            rand = rand * DateTime.Now.Millisecond;
             Random random = new Random(rand);
         ret1:
             neutron.x = random.Next((int)BoxNeutoron.x, (int)BoxNeutoron.xmax);
@@ -283,6 +277,24 @@ namespace Угловое_распределение
             if (!getBoolProvKordNeuBox(neutron.x, neutron.radius, BoxNeutoron.x, BoxNeutoron.xmax))
                 goto ret3;
             return neutron;
+        }
+
+        public bool boxMax(Neutron_struct[] neutronsmass, double density)
+        {
+            double v_shre = 0;
+            foreach(var neu in neutronsmass)
+            {
+                v_shre += 4.0 / 3.0 * Math.PI * Math.Pow(neu.radius, 3);
+            }
+            double v_shre2 = v_shre / density;
+            double rebro = Math.Pow(v_shre2, 1.0 / 3.0);
+            Console.WriteLine(v_shre + "  " + v_shre2 + "   " + rebro);
+
+            BoxNeutoron.xmax = rebro;
+            BoxNeutoron.ymax = rebro;
+            BoxNeutoron.zmax = rebro;
+
+            return true;
         }
 
         /// <summary>

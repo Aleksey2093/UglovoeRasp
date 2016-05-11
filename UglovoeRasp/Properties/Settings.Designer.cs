@@ -25,7 +25,7 @@ namespace Угловое_распределение.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10000")]
         public int restarnfor {
             get {
                 return ((int)(this["restarnfor"]));

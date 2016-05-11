@@ -282,16 +282,13 @@ namespace Угловое_распределение
             int rand = DateTime.Now.DayOfYear + DateTime.Now.Year + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + DateTime.Now.Millisecond - (int)grains_int;
             rand = Math.Abs(rand);
             Random random = new Random(rand);
-        ret: if (!BoxNeutoron.genMaxBoxXYZ(random, grains_int, density))
-            {
-                BoxNeutoron.editing = true;
-                goto ret;
-            }
+
             Neutron_struct[] neutrons_box = neutron_class.randomInW_R(grains_int, R_double);
             Invoke(new MethodInvoker(() =>
             {
                 ProgressBar1Расчет.Value = 25;
             }));
+            neutron_class.boxMax(neutrons_box,density);
             if (checkBox1GraphW.Checked)
             {
                 double[] rm = new double[grains_int];
