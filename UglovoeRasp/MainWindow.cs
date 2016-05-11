@@ -306,7 +306,7 @@ namespace Угловое_распределение
                 ProgressBar1Расчет.Value = 50;
             }));
             if (checkBox1Kord.Checked == false &&
-                MessageBox.Show("Расчитать координаты нейтронов?", "", MessageBoxButtons.YesNo,
+                MessageBox.Show("Рассчитать координаты нейтронов?", "", MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 Invoke(new MethodInvoker(() => { checkBox1Kord.Checked = true; }));
@@ -323,6 +323,7 @@ namespace Угловое_распределение
                 {
                     MessageBox.Show("Невозможно создать пространство нейтронов для текущих исходных данных. Попробуйте произвести рассчет заново","Информация",
                         MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    return;
                 }
                 GraphicsPaint graph = new GraphicsPaint();
                 graph.ThreeDGraphPaint(neutrons_box, (int)BoxNeutoron.x, (int)BoxNeutoron.xmax, (int)BoxNeutoron.x,

@@ -203,56 +203,57 @@ namespace Угловое_распределение
             int restartmetod = 0;
         start0:
             restartmetod++;
-            int sumconnects = 0; DateTime chetchik = DateTime.Now;
-            Parallel.For(0, neutrons.Length-1, (i, statei) =>
+            bool sumconnects = false; DateTime chetchik = DateTime.Now;
+            int index = -1;
+            Parallel.For(0, neutrons.Length - 1, (i, statei) =>
             {
-                Parallel.For(i + 1, neutrons.Length, (j, statej) =>
+                //Parallel.For(i + 1, neutrons.Length, (j, statej) =>
+                for (int j=i+1;j<neutrons.Length;j++)
                 {
                     double L = Math.Pow((neutrons[j].x - neutrons[i].x), 2)
                         + Math.Pow((neutrons[j].y - neutrons[i].y), 2)
                         + Math.Pow((neutrons[j].z - neutrons[i].z), 2);
                     L = Math.Sqrt(L);
-                    if (Math.Abs(L) < neutrons[i].radius + neutrons[j].radius)
+                    if (Math.Abs(L) < neutrons[i].radius + neutrons[j].radius && sumconnects == false)
                     {
-                        sumconnects++;
-                        statei.Break();
+                        sumconnects = true;
+                        index = i;
+                        break;
                     }
-                });
+                }//);
+                if (sumconnects)
+                    statei.Break();
             });
-            Console.WriteLine("Подсчет суммы " + sumconnects + " занял - " + (DateTime.Now - chetchik).ToString());
-            new System.Threading.Thread(delegate() { MessageBox.Show("Подсчет суммы " + sumconnects + " занял - " + (DateTime.Now - chetchik).ToString(), "", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
+            Console.WriteLine("Подсчет суммы занял - " + (DateTime.Now - chetchik).ToString());
             chetchik = DateTime.Now;
-            if (sumconnects == 0)
+            if (sumconnects == false)
                 return true;
             if (restartmetod > Properties.Settings.Default.restarnfor)
                 return false;
             else if (neutrons.Length >= 1000000)
-                new System.Threading.Thread(delegate() { MessageBox.Show("Проход разбиения по просранству №"+restartmetod + "\n Сумма соприкосновений " + sumconnects + ".", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
-            for (int i = 0; i < neutrons.Length; i++)
-            {
-                var neutron = neutrons[i];
-            ret0:
-                bool ifi = false;
-                Parallel.For(i+1, neutrons.Length, (j, statej) =>
-                    {
-                            var t2 = neutrons[j];
-                            double L = Math.Pow((t2.x - neutron.x), 2)
-                                + Math.Pow((t2.y - neutron.y), 2)
-                                + Math.Pow((t2.z - neutron.z), 2);
-                            L = Math.Sqrt(L);
-                            if (L < neutron.radius + t2.radius)
-                            {
-                                ifi = true;
-                                statej.Break();
-                            }
-                    });
-                if (ifi)
+                new System.Threading.Thread(delegate() { MessageBox.Show("Проход разбиения по просранству №" + restartmetod + ".", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
+            var neutron = neutrons[index];
+        ret0:
+            bool ifi = false;
+            Parallel.For(index + 1, neutrons.Length, (j, statej) =>
                 {
-                    neutron = getNewValue(neutron);
-                    goto ret0;
-                }
+                    var t2 = neutrons[j];
+                    double L = Math.Pow((t2.x - neutron.x), 2)
+                        + Math.Pow((t2.y - neutron.y), 2)
+                        + Math.Pow((t2.z - neutron.z), 2);
+                    L = Math.Sqrt(L);
+                    if (L < neutron.radius + t2.radius)
+                    {
+                        ifi = true;
+                        statej.Break();
+                    }
+                });
+            if (ifi)
+            {
+                neutron = getNewValue(neutron);
+                goto ret0;
             }
-            Console.WriteLine("Проверка пересечений заняля - " + (DateTime.Now - chetchik).ToString());
+            Console.WriteLine("Проверка пересечений заняла - " + (DateTime.Now - chetchik).ToString());
             goto start0;
         }
 
