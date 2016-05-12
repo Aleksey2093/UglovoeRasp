@@ -102,16 +102,12 @@ namespace Угловое_распределение
             rand += (int)Math.Truncate(dr);
             rand = Math.Abs(rand);
             Neutron_struct[] neutrons = new Neutron_struct[n];
-            int r_r = 0;
             Random randoms = new Random(rand);
             Parallel.For(0,neutrons.Length,(i,state)=>
             {
                 Random random = randoms;
-                r_r = r_r + 1;
-                if (r_r > 5)
-                    r_r = 0;
             reti:
-            double _r = random.Next(0,r_r) + Math.Round(random.NextDouble(),4); 
+            double _r = random.Next(0,(int)dr+1) + Math.Round(random.NextDouble(),6);
                 double w_r = ((3 * Math.Pow(_r, 2)) / (Math.Pow(dr, 3)));
                 double w_ = Math.Exp(-Math.Pow((_r / dr), 3));
                 w_r = w_r * w_;
@@ -177,16 +173,18 @@ namespace Угловое_распределение
             return res;
         }
 
-        private bool getNeutoronsNotConnect(Neutron_struct[] neutrons)
+        struct ResSum
         {
-            int restartmetod = 0;
-            int index = 0;
-        start0:
-            restartmetod++;
-            bool sumconnects = false; DateTime chetchik = DateTime.Now;
+            public bool sumconnect;
+            public int index;
+        }
+
+        private ResSum getsumConnect(int index, Neutron_struct[] neutrons)
+        {
+            bool sumconnects = false;
             Parallel.For(index, neutrons.Length - 1, (i, statei) =>
             {
-                for (int j=i+1;j<neutrons.Length;j++)
+                for (int j = i + 1; j < neutrons.Length; j++)
                 {
                     double L = Math.Pow((neutrons[j].x - neutrons[i].x), 2)
                         + Math.Pow((neutrons[j].y - neutrons[i].y), 2)
@@ -201,6 +199,109 @@ namespace Угловое_распределение
                     }
                 }
             });
+            ResSum r = new ResSum();
+            r.sumconnect = sumconnects;
+            r.index = index;
+            return r;
+        }
+
+        private bool deleteConnectOtherNeutron(int index, Neutron_struct[] neutrons, bool metod)
+        {
+            bool ifi = false;
+            if (metod)
+            {
+                Parallel.For(index + 1, neutrons.Length, (j, statej) =>
+                {
+                    double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
+                        + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
+                        + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
+                    L = Math.Sqrt(L);
+                    if (L < neutrons[index].radius + neutrons[j].radius)
+                    {
+                        ifi = true;
+                        statej.Break();
+                    }
+                });
+                if (ifi == false)
+                {
+                    Parallel.For(0, index, (j, statej) =>
+                    {
+                        double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
+                            + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
+                            + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
+                        L = Math.Sqrt(L);
+                        if (L < neutrons[index].radius + neutrons[j].radius)
+                        {
+                            ifi = true;
+                            statej.Break();
+                        }
+                    });
+                }
+            }
+            else
+            {
+            restart0:
+                int kolvo = 0; List<int> idot = new List<int>();
+                Parallel.For(index + 1, neutrons.Length, (j, statej) =>
+                {
+                    double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
+                        + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
+                        + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
+                    L = Math.Sqrt(L);
+                    if (L < neutrons[index].radius + neutrons[j].radius)
+                    {
+                        idot.Add(j);
+                    }
+                });
+                Parallel.For(0, index, (j, statej) =>
+                {
+                    double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
+                        + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
+                        + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
+                    L = Math.Sqrt(L);
+                    if (L < neutrons[index].radius + neutrons[j].radius)
+                    {
+                        idot.Add(j);
+                    }
+                });
+                kolvo++;
+                if (kolvo > 10000)
+                    return false;
+                Parallel.ForEach(idot, (i, state) =>
+                    {
+                        neutrons[i] = getNewValue(neutrons[i]);
+                    });
+                goto restart0;
+            }
+            return ifi;
+        }
+
+        private bool getNeutoronsNotConnect(Neutron_struct[] neutrons)
+        {
+            int maxrestartmetod = 0;
+            int restartmetod = 0;
+            int index = 0;
+            start1:
+            for (int i = 0; i < neutrons.Length - 1; i++)
+            {
+                int swap = i;
+                Parallel.For(0, neutrons.Length, (j, state) =>
+                {
+                    if (neutrons[j].radius > neutrons[swap].radius)
+                    {
+                        swap = j;
+                    }
+                });
+                Neutron_struct sw = neutrons[i];
+                neutrons[i] = neutrons[swap];
+                neutrons[swap] = sw;
+            }
+        start0:
+            restartmetod++;
+            DateTime chetchik = DateTime.Now;
+            ResSum sum = getsumConnect(index, neutrons);
+            bool sumconnects = sum.sumconnect;
+            index = sum.index;
             Console.WriteLine("Подсчет суммы занял - " + (DateTime.Now - chetchik).ToString());
             chetchik = DateTime.Now;
             mainwindow.newValueProgresBar();
@@ -213,45 +314,35 @@ namespace Угловое_распределение
                     }
                     return true;
                 }
-            if (restartmetod > Properties.Settings.Default.restarnfor)
-                return false;
-            else if (neutrons.Length >= 1000000)
-                new System.Threading.Thread(delegate() { MessageBox.Show("Проход разбиения по просранству №" + restartmetod + ".", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
+                if (restartmetod > Properties.Settings.Default.restarnfor)
+                {
+                    maxrestartmetod++;
+                    restartmetod = 0;
+                    new System.Threading.Thread(delegate() { MessageBox.Show("Проход разбиения по просранству №" + maxrestartmetod + "(maxrestartmetod).", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
+                    Random rand = new Random(DateTime.Today.Millisecond*DateTime.Today.Minute);
+
+                    if (deleteConnectOtherNeutron(index, neutrons, false) == false)
+                    {
+                        for (int i = 0; i < rand.Next(5, 20); i++)
+                        {
+                            int c = rand.Next(neutrons.Length);
+                            neutrons[c] = getNewValue(neutrons[c]);
+                        }
+                    }
+                    goto start1;
+                }
+                else if (neutrons.Length >= 10000000)
+                    new System.Threading.Thread(delegate() { MessageBox.Show("Проход разбиения по просранству №" + restartmetod + "(restartmetod).", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); }).Start();
             int restartswap = 0;
             ret0:
-            bool ifi = false;
-            Parallel.For(index + 1, neutrons.Length, (j, statej) =>
-                {
-                    double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
-                        + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
-                        + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
-                    L = Math.Sqrt(L);
-                    if (L < neutrons[index].radius + neutrons[j].radius)
-                    {
-                        ifi = true;
-                        statej.Break();
-                    }
-                });
-            if (ifi == false)
-            {
-                Parallel.For(0, index, (j, statej) =>
-                {
-                    double L = Math.Pow((neutrons[j].x - neutrons[index].x), 2)
-                        + Math.Pow((neutrons[j].y - neutrons[index].y), 2)
-                        + Math.Pow((neutrons[j].z - neutrons[index].z), 2);
-                    L = Math.Sqrt(L);
-                    if (L < neutrons[index].radius + neutrons[j].radius)
-                    {
-                        ifi = true;
-                        statej.Break();
-                    }
-                });
-            }
+            bool ifi = deleteConnectOtherNeutron(index,neutrons,true);
             if (ifi)
             {
                 restartswap++;
                 if (restartswap > Properties.Settings.Default.restarnfor)
+                {
                     goto start0;
+                }
                 neutrons[index] = getNewValue(neutrons[index]);
                 goto ret0;
             }
@@ -283,7 +374,7 @@ namespace Угловое_распределение
         ret3:
             neutron.z = random.Next((int)BoxNeutoron.z, (int)BoxNeutoron.zmax);
             neutron.z += random.NextDouble();
-            if (!getBoolProvKordNeuBox(neutron.x, neutron.radius, BoxNeutoron.x, BoxNeutoron.xmax))
+            if (!getBoolProvKordNeuBox(neutron.z, neutron.radius, BoxNeutoron.z, BoxNeutoron.zmax))
                 goto ret3;
             return neutron;
         }
